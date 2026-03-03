@@ -15,13 +15,15 @@ export default function NovaMetaPage() {
   const [type, setType] = useState<'financial' | 'habit' | 'task' | 'hybrid'>('task')
   const [deadline, setDeadline] = useState('')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user || !title || !deadline) return
     setLoading(true)
+    setError('')
 
-    const { error } = await supabase.from('goals').insert({
+    const { error: err } = await supabase.from('goals').insert({
       user_id: user.id,
       title,
       description: description || null,
@@ -29,10 +31,12 @@ export default function NovaMetaPage() {
       deadline,
     })
 
-    if (!error) {
-      router.push('/metas')
+    if (err) {
+      setError(err.message || 'Erro ao criar meta. Tente novamente.')
+      setLoading(false)
+      return
     }
-    setLoading(false)
+    router.push('/metas')
   }
 
   return (
@@ -103,6 +107,8 @@ export default function NovaMetaPage() {
               className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             />
           </div>
+
+          {error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{error}</p>}
 
           <button
             type="submit"
