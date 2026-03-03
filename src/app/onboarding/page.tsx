@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import { LIFE_CONTEXTS, CYCLE_OPTIONS } from '@/lib/constants'
 import { ArrowRight, ArrowLeft, Sparkles } from 'lucide-react'
@@ -18,7 +18,7 @@ export default function OnboardingPage() {
   const [habitName, setHabitName] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-  const supabase = createClient()
+  const { supabase, user, refreshProfile } = useAuth()
 
   useEffect(() => {
     const defaultDeadline = new Date()
@@ -28,7 +28,6 @@ export default function OnboardingPage() {
 
   const handleComplete = async () => {
     setLoading(true)
-    const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
     const cycleStart = new Date()
@@ -60,6 +59,7 @@ export default function OnboardingPage() {
       })
     }
 
+    await refreshProfile()
     router.push('/dashboard')
   }
 
