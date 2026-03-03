@@ -1,32 +1,41 @@
 'use client'
 
 import { useAuth } from '@/hooks/useAuth'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 import Sidebar from './Sidebar'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, profile, loading } = useAuth()
   const router = useRouter()
-  const redirecting = useRef(false)
+  const pathname = usePathname()
+  const hasRedirected = useRef(false)
 
   useEffect(() => {
-    // Prevent redirect loops by only redirecting once
-    if (loading || redirecting.current) return
+    if (loading) return
+
+    // Don't redirect more than once per state change
+    if (hasRedirected.current) return
 
     if (!user) {
-      redirecting.current = true
-      router.push('/auth/login')
-    } else if (profile && !profile.onboarding_completed) {
-      redirecting.current = true
-      router.push('/onboarding')
+      hasRedirected.current = true
+      router.replace('/auth/login')
+      return
     }
-  }, [loading, user, profile, router])
 
-  // Reset redirect flag when user/profile changes (e.g., after login)
+    if (profile && !profile.onboarding_completed && pathname !== '/onboarding') {
+      hasRedirected.current = true
+      router.replace('/onboarding')
+      return
+    }
+  }, [loading, user, profile, router, pathname])
+
+  // Reset redirect flag only when auth state settles to a valid state
   useEffect(() => {
-    redirecting.current = false
-  }, [user?.id, profile?.onboarding_completed])
+    if (user && profile?.onboarding_completed) {
+      hasRedirected.current = false
+    }
+  }, [user, profile?.onboarding_completed])
 
   if (loading) {
     return (

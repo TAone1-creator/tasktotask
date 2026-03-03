@@ -23,13 +23,13 @@ export default function LoginPage() {
 
       if (error) {
         setError('Email ou senha incorretos.')
-        setLoading(false)
         return
       }
 
       router.push('/dashboard')
     } catch {
       setError('Erro de conexão. Tente novamente.')
+    } finally {
       setLoading(false)
     }
   }

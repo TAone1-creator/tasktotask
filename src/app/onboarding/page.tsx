@@ -25,25 +25,35 @@ export default function OnboardingPage() {
     setGoalDeadline(d.toISOString().split('T')[0])
   }, [])
 
+  const [error, setError] = useState('')
+
   const handleComplete = async () => {
-    setLoading(true)
     if (!user) return
-    const cycleStart = new Date()
-    const cycleEnd = new Date()
-    cycleEnd.setMonth(cycleEnd.getMonth() + cycleMonths)
+    setLoading(true)
+    setError('')
 
-    await supabase.from('profiles').update({
-      context, cycle_months: cycleMonths,
-      cycle_start_date: cycleStart.toISOString().split('T')[0],
-      cycle_end_date: cycleEnd.toISOString().split('T')[0],
-      onboarding_completed: true,
-    }).eq('id', user.id)
+    try {
+      const cycleStart = new Date()
+      const cycleEnd = new Date()
+      cycleEnd.setMonth(cycleEnd.getMonth() + cycleMonths)
 
-    if (goalTitle) await supabase.from('goals').insert({ user_id: user.id, title: goalTitle, type: goalType, deadline: goalDeadline })
-    if (habitName) await supabase.from('habits').insert({ user_id: user.id, name: habitName, frequency: 'daily' })
+      await supabase.from('profiles').update({
+        context, cycle_months: cycleMonths,
+        cycle_start_date: cycleStart.toISOString().split('T')[0],
+        cycle_end_date: cycleEnd.toISOString().split('T')[0],
+        onboarding_completed: true,
+      }).eq('id', user.id)
 
-    await refreshProfile()
-    router.push('/dashboard')
+      if (goalTitle) await supabase.from('goals').insert({ user_id: user.id, title: goalTitle, type: goalType, deadline: goalDeadline })
+      if (habitName) await supabase.from('habits').insert({ user_id: user.id, name: habitName, frequency: 'daily' })
+
+      await refreshProfile()
+      router.push('/dashboard')
+    } catch {
+      setError('Erro ao salvar. Tente novamente.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const steps: Record<Step, React.ReactNode> = {
@@ -114,6 +124,7 @@ export default function OnboardingPage() {
         <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-6"><Sparkles className="text-white" size={28} /></div>
         <h2 className="text-3xl font-bold text-gray-900">Tudo pronto!</h2>
         <p className="mt-4 text-gray-500 max-w-md mx-auto">Seu espaço está configurado. Agora é com você.</p>
+        {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
         <button onClick={handleComplete} disabled={loading} className="mt-8 inline-flex items-center gap-2 px-8 py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-colors disabled:opacity-50">{loading ? 'Preparando...' : 'Ir para o Dashboard'}</button>
       </div>
     ),

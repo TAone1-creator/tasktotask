@@ -20,7 +20,7 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
+          cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           )
           supabaseResponse = NextResponse.next({ request })
@@ -32,7 +32,23 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  // getUser() validates with the Supabase Auth server (correct for server-side).
+  // Add a timeout to prevent page load from hanging indefinitely if the
+  // Supabase Auth server is slow or unreachable.
+  let user = null
+  try {
+    const result = await Promise.race([
+      supabase.auth.getUser(),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Auth timeout')), 5000)
+      ),
+    ])
+    user = result.data?.user ?? null
+  } catch {
+    // Auth check timed out or failed - let the page load anyway.
+    // Client-side auth (AuthContext) will handle the redirect if needed.
+    return supabaseResponse
+  }
 
   const publicPaths = ['/auth/login', '/auth/register', '/auth/callback']
   const isPublicPath = publicPaths.some(path => request.nextUrl.pathname.startsWith(path))
