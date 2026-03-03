@@ -2,7 +2,7 @@
 
 import AppLayout from '@/components/layout/AppLayout'
 import { useAuth } from '@/hooks/useAuth'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import Link from 'next/link'
 import { Plus, Repeat, Pause, Play } from 'lucide-react'
 import { format, subDays, eachDayOfInterval } from 'date-fns'
@@ -15,11 +15,11 @@ export default function HabitosPage() {
   const [logs, setLogs] = useState<HabitLog[]>([])
   const [loading, setLoading] = useState(true)
 
-  const today = new Date().toISOString().split('T')[0]
-  const last30Days = eachDayOfInterval({
+  const today = useMemo(() => new Date().toISOString().split('T')[0], [])
+  const last30Days = useMemo(() => eachDayOfInterval({
     start: subDays(new Date(), 29),
     end: new Date(),
-  })
+  }), [])
 
   useEffect(() => {
     if (!user) return
@@ -68,21 +68,34 @@ export default function HabitosPage() {
     setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, status: newStatus } : h))
   }
 
-  const getStreak = (habitId: string) => {
-    let streak = 0
-    for (let i = 0; i < 365; i++) {
-      const date = subDays(new Date(), i).toISOString().split('T')[0]
-      if (logs.some(l => l.habit_id === habitId && l.date === date)) {
-        streak++
-      } else {
-        break
-      }
+  // Build a Set for O(1) log lookups instead of O(n) .some() on every check
+  const logSet = useMemo(() => {
+    const set = new Set<string>()
+    for (const l of logs) {
+      set.add(`${l.habit_id}:${l.date}`)
     }
-    return streak
-  }
+    return set
+  }, [logs])
 
-  const activeHabits = habits.filter(h => h.status === 'active')
-  const pausedHabits = habits.filter(h => h.status === 'paused')
+  const streaks = useMemo(() => {
+    const result: Record<string, number> = {}
+    for (const habit of habits) {
+      let streak = 0
+      for (let i = 0; i < 30; i++) {
+        const date = subDays(new Date(), i).toISOString().split('T')[0]
+        if (logSet.has(`${habit.id}:${date}`)) {
+          streak++
+        } else {
+          break
+        }
+      }
+      result[habit.id] = streak
+    }
+    return result
+  }, [habits, logSet])
+
+  const activeHabits = useMemo(() => habits.filter(h => h.status === 'active'), [habits])
+  const pausedHabits = useMemo(() => habits.filter(h => h.status === 'paused'), [habits])
 
   return (
     <AppLayout>
@@ -120,8 +133,8 @@ export default function HabitosPage() {
               <h2 className="text-sm font-semibold text-gray-900 mb-4">Hoje — {format(new Date(), "d 'de' MMMM", { locale: ptBR })}</h2>
               <div className="space-y-3">
                 {activeHabits.map((habit) => {
-                  const isChecked = logs.some(l => l.habit_id === habit.id && l.date === today)
-                  const streak = getStreak(habit.id)
+                  const isChecked = logSet.has(`${habit.id}:${today}`)
+                  const streak = streaks[habit.id] || 0
                   return (
                     <div key={habit.id} className="flex items-center justify-between p-3 rounded-lg border border-gray-100">
                       <div className="flex items-center gap-3">
@@ -157,7 +170,7 @@ export default function HabitosPage() {
 
             {/* Heatmap for each habit */}
             {activeHabits.map((habit) => {
-              const streak = getStreak(habit.id)
+              const streak = streaks[habit.id] || 0
               return (
                 <div key={habit.id} className="bg-white rounded-xl border border-gray-100 p-5">
                   <div className="flex items-center justify-between mb-3">
@@ -173,7 +186,7 @@ export default function HabitosPage() {
                   <div className="flex gap-1 flex-wrap">
                     {last30Days.map((day) => {
                       const dateStr = day.toISOString().split('T')[0]
-                      const isCompleted = logs.some(l => l.habit_id === habit.id && l.date === dateStr)
+                      const isCompleted = logSet.has(`${habit.id}:${dateStr}`)
                       return (
                         <button
                           key={dateStr}

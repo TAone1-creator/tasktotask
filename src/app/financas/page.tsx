@@ -2,7 +2,7 @@
 
 import AppLayout from '@/components/layout/AppLayout'
 import { useAuth } from '@/hooks/useAuth'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Plus, TrendingUp, TrendingDown, Wallet, PiggyBank } from 'lucide-react'
 import { FINANCIAL_CATEGORIES } from '@/lib/constants'
@@ -37,19 +37,30 @@ export default function FinancasPage() {
     fetchData()
   }, [user, selectedMonth])
 
-  const income = transactions.filter(t => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0)
-  const expense = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0)
-  const balance = income - expense
+  const { income, expense, balance, sortedCategories, maxCategory } = useMemo(() => {
+    let inc = 0
+    let exp = 0
+    const catTotals: Record<string, number> = {}
 
-  const categoryTotals = transactions
-    .filter(t => t.type === 'expense')
-    .reduce((acc, t) => {
-      acc[t.category] = (acc[t.category] || 0) + Number(t.amount)
-      return acc
-    }, {} as Record<string, number>)
+    for (const t of transactions) {
+      const amount = Number(t.amount)
+      if (t.type === 'income') {
+        inc += amount
+      } else {
+        exp += amount
+        catTotals[t.category] = (catTotals[t.category] || 0) + amount
+      }
+    }
 
-  const sortedCategories = Object.entries(categoryTotals).sort(([, a], [, b]) => b - a)
-  const maxCategory = sortedCategories.length > 0 ? sortedCategories[0][1] : 0
+    const sorted = Object.entries(catTotals).sort(([, a], [, b]) => b - a)
+    return {
+      income: inc,
+      expense: exp,
+      balance: inc - exp,
+      sortedCategories: sorted,
+      maxCategory: sorted.length > 0 ? sorted[0][1] : 0,
+    }
+  }, [transactions])
 
   const getCategoryLabel = (id: string) => FINANCIAL_CATEGORIES.find(c => c.id === id)?.label || id
 

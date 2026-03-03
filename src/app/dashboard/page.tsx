@@ -25,11 +25,13 @@ export default function DashboardPage() {
     const monthStart = today.substring(0, 7) + '-01'
 
     const fetchData = async () => {
-      const goalsRes = await supabase.from('goals').select('*').eq('user_id', user.id).eq('status', 'active').order('deadline').limit(5)
-      const habitsRes = await supabase.from('habits').select('*').eq('user_id', user.id).eq('status', 'active')
-      const logsRes = await supabase.from('habit_logs').select('*').eq('user_id', user.id).eq('date', today).eq('completed', true)
-      const tasksRes = await supabase.from('tasks').select('*').eq('user_id', user.id).eq('status', 'pending').order('due_date').limit(5)
-      const transactionsRes = await supabase.from('transactions').select('*').eq('user_id', user.id).gte('date', monthStart).lte('date', today)
+      const [goalsRes, habitsRes, logsRes, tasksRes, transactionsRes] = await Promise.all([
+        supabase.from('goals').select('*').eq('user_id', user.id).eq('status', 'active').order('deadline').limit(5),
+        supabase.from('habits').select('*').eq('user_id', user.id).eq('status', 'active'),
+        supabase.from('habit_logs').select('*').eq('user_id', user.id).eq('date', today).eq('completed', true),
+        supabase.from('tasks').select('*').eq('user_id', user.id).eq('status', 'pending').order('due_date').limit(5),
+        supabase.from('transactions').select('*').eq('user_id', user.id).gte('date', monthStart).lte('date', today),
+      ])
 
       setGoals((goalsRes.data || []) as Goal[])
       setHabits((habitsRes.data || []) as Habit[])
