@@ -2,8 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/hooks/useAuth'
 import {
   LayoutDashboard,
   Target,
@@ -39,7 +39,7 @@ const navItems = [
 export default function Sidebar({ profile }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
-  const supabase = createClient()
+  const { supabase } = useAuth()
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const levelInfo = getLevelInfo(profile?.xp ?? 0)
