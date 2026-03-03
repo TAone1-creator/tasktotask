@@ -17,6 +17,7 @@ export default function NovoHabitoPage() {
   const [goalId, setGoalId] = useState('')
   const [goals, setGoals] = useState<Goal[]>([])
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     if (!user) return
@@ -28,8 +29,9 @@ export default function NovoHabitoPage() {
     e.preventDefault()
     if (!user || !name) return
     setLoading(true)
+    setError('')
 
-    const { error } = await supabase.from('habits').insert({
+    const { error: err } = await supabase.from('habits').insert({
       user_id: user.id,
       name,
       frequency,
@@ -37,10 +39,12 @@ export default function NovoHabitoPage() {
       goal_id: goalId || null,
     })
 
-    if (!error) {
-      router.push('/habitos')
+    if (err) {
+      setError(err.message || 'Erro ao criar hábito. Tente novamente.')
+      setLoading(false)
+      return
     }
-    setLoading(false)
+    router.push('/habitos')
   }
 
   return (
@@ -116,6 +120,8 @@ export default function NovoHabitoPage() {
               ))}
             </select>
           </div>
+
+          {error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{error}</p>}
 
           <button
             type="submit"

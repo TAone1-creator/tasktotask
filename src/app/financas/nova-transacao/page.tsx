@@ -20,13 +20,15 @@ export default function NovaTransacaoPage() {
   const [installmentTotal, setInstallmentTotal] = useState('')
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0])
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user || !amount || !date) return
     setLoading(true)
+    setError('')
 
-    const { error } = await supabase.from('transactions').insert({
+    const { error: err } = await supabase.from('transactions').insert({
       user_id: user.id,
       type,
       amount: parseFloat(amount),
@@ -38,15 +40,18 @@ export default function NovaTransacaoPage() {
       date,
     })
 
-    if (!error) {
-      // Award XP for financial record
-      const { data: profile } = await supabase.from('profiles').select('xp').eq('id', user.id).single()
-      if (profile) {
-        await supabase.from('profiles').update({ xp: profile.xp + 3 }).eq('id', user.id)
-      }
-      router.push('/financas')
+    if (err) {
+      setError(err.message || 'Erro ao registrar transação. Tente novamente.')
+      setLoading(false)
+      return
     }
-    setLoading(false)
+
+    // Award XP for financial record
+    const { data: profile } = await supabase.from('profiles').select('xp').eq('id', user.id).single()
+    if (profile) {
+      await supabase.from('profiles').update({ xp: profile.xp + 3 }).eq('id', user.id)
+    }
+    router.push('/financas')
   }
 
   const expenseCategories = FINANCIAL_CATEGORIES.filter(c => c.id !== 'renda')
@@ -194,6 +199,8 @@ export default function NovaTransacaoPage() {
               className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             />
           </div>
+
+          {error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{error}</p>}
 
           <button
             type="submit"

@@ -21,6 +21,7 @@ export default function NovaTarefaPage() {
   const [goalId, setGoalId] = useState('')
   const [goals, setGoals] = useState<Goal[]>([])
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     if (!user) return
@@ -32,8 +33,9 @@ export default function NovaTarefaPage() {
     e.preventDefault()
     if (!user || !title) return
     setLoading(true)
+    setError('')
 
-    const { error } = await supabase.from('tasks').insert({
+    const { error: err } = await supabase.from('tasks').insert({
       user_id: user.id,
       title,
       description: description || null,
@@ -44,10 +46,12 @@ export default function NovaTarefaPage() {
       goal_id: goalId || null,
     })
 
-    if (!error) {
-      router.push('/tarefas')
+    if (err) {
+      setError(err.message || 'Erro ao criar tarefa. Tente novamente.')
+      setLoading(false)
+      return
     }
-    setLoading(false)
+    router.push('/tarefas')
   }
 
   return (
@@ -169,6 +173,8 @@ export default function NovaTarefaPage() {
               ))}
             </select>
           </div>
+
+          {error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{error}</p>}
 
           <button
             type="submit"
