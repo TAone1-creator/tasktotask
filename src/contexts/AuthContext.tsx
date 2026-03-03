@@ -19,84 +19,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const supabase = useMemo(() => {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL
     const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    if (!url || !key) {
-      throw new Error('Missing Supabase environment variables.')
-    }
+    if (!url || !key) throw new Error('Missing Supabase environment variables.')
     return createBrowserClient(url, key)
   }, [])
 
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
-  const initialized = useRef(false)
   const currentUserIdRef = useRef<string | null>(null)
 
-  const fetchProfile = useCallback(async (userId: string) => {
-    try {
-      const { data } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single()
-      setProfile(data)
-    } catch {
-      setProfile(null)
-    }
-  }, [supabase])
-
-  const refreshProfile = useCallback(async () => {
-    if (currentUserIdRef.current) {
-      await fetchProfile(currentUserIdRef.current)
-    }
-  }, [fetchProfile])
-
+  // ── Auth listener ─────────────────────────────────────────────────
+  // Uses onAuthStateChange as single source of truth.
+  // INITIAL_SESSION reads from localStorage (instant, never hangs).
+  // We NEVER call getUser() on the client (known to hang after inactivity).
+  // We NEVER call supabase DB queries inside this callback (can deadlock).
   useEffect(() => {
     let mounted = true
 
-    const init = async () => {
-      try {
-        // Use getUser() instead of getSession() to validate with the server
-        // and avoid stale/expired session data from localStorage
-        const { data: { user: validatedUser }, error } = await supabase.auth.getUser()
-        if (!mounted) return
-
-        if (error || !validatedUser) {
-          setUser(null)
-          setProfile(null)
-          currentUserIdRef.current = null
-        } else {
-          setUser(validatedUser)
-          currentUserIdRef.current = validatedUser.id
-          await fetchProfile(validatedUser.id)
-        }
-      } catch {
-        if (mounted) {
-          setUser(null)
-          setProfile(null)
-          currentUserIdRef.current = null
-        }
-      }
-
-      if (mounted) {
-        initialized.current = true
-        setLoading(false)
-      }
-    }
-
-    init()
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!mounted) return
 
-      // Skip INITIAL_SESSION since we handle that in init()
-      if (event === 'INITIAL_SESSION') return
+      if (event === 'INITIAL_SESSION') {
+        const currentUser = session?.user ?? null
+        currentUserIdRef.current = currentUser?.id ?? null
+        setUser(currentUser)
+        // If no user, loading done immediately
+        // If user exists, loading stays true until profile effect completes
+        if (!currentUser) {
+          setLoading(false)
+        }
+        return
+      }
 
-      const newUser = session?.user ?? null
-
-      // Only update state if user actually changed (prevents re-render loops on token refresh)
-      if (event === 'TOKEN_REFRESHED') {
-        // Token refreshed but same user - no need to update state
-        if (newUser?.id === currentUserIdRef.current) return
+      if (event === 'SIGNED_IN') {
+        const newUser = session?.user ?? null
+        if (newUser && newUser.id !== currentUserIdRef.current) {
+          currentUserIdRef.current = newUser.id
+          setLoading(true) // Show spinner until profile loads
+          setUser(newUser)
+        }
+        return
       }
 
       if (event === 'SIGNED_OUT') {
@@ -106,19 +68,67 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return
       }
 
-      // User changed (sign in, or different user)
-      if (newUser && newUser.id !== currentUserIdRef.current) {
-        currentUserIdRef.current = newUser.id
-        setUser(newUser)
-        await fetchProfile(newUser.id)
-      }
+      // TOKEN_REFRESHED, USER_UPDATED, PASSWORD_RECOVERY, etc:
+      // Same user — no state change. This prevents the re-render storms
+      // that cause loading loops and cascading data re-fetches.
     })
+
+    // Safety net: if nothing fires within 5s, unblock the UI
+    const safetyTimeout = setTimeout(() => {
+      if (mounted && loading) setLoading(false)
+    }, 5000)
 
     return () => {
       mounted = false
+      clearTimeout(safetyTimeout)
       subscription.unsubscribe()
     }
-  }, [supabase, fetchProfile])
+  }, [supabase]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Profile fetch (separate from auth callback to avoid deadlocks) ─
+  useEffect(() => {
+    if (!user?.id) {
+      setProfile(null)
+      return
+    }
+
+    let mounted = true
+
+    const loadProfile = async () => {
+      try {
+        const { data } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single()
+        if (mounted) setProfile(data)
+      } catch {
+        if (mounted) setProfile(null)
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    }
+
+    loadProfile()
+
+    return () => { mounted = false }
+  }, [user?.id, supabase])
+
+  // ── refreshProfile (for use after onboarding, etc.) ───────────────
+  const refreshProfile = useCallback(async () => {
+    const userId = currentUserIdRef.current
+    if (!userId) return
+    try {
+      const { data } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single()
+      setProfile(data)
+    } catch {
+      // keep existing profile on refresh failure
+    }
+  }, [supabase])
 
   const value = useMemo(
     () => ({ user, profile, loading, supabase, refreshProfile }),
@@ -130,8 +140,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider')
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider')
   return context
 }

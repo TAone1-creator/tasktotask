@@ -25,26 +25,30 @@ export default function DashboardPage() {
     const monthStart = today.substring(0, 7) + '-01'
 
     const fetchData = async () => {
-      const [goalsRes, habitsRes, logsRes, tasksRes, transactionsRes] = await Promise.all([
-        supabase.from('goals').select('*').eq('user_id', user.id).eq('status', 'active').order('deadline').limit(5),
-        supabase.from('habits').select('*').eq('user_id', user.id).eq('status', 'active'),
-        supabase.from('habit_logs').select('*').eq('user_id', user.id).eq('date', today).eq('completed', true),
-        supabase.from('tasks').select('*').eq('user_id', user.id).eq('status', 'pending').order('due_date').limit(5),
-        supabase.from('transactions').select('*').eq('user_id', user.id).gte('date', monthStart).lte('date', today),
-      ])
+      try {
+        const [goalsRes, habitsRes, logsRes, tasksRes, transactionsRes] = await Promise.all([
+          supabase.from('goals').select('*').eq('user_id', user.id).eq('status', 'active').order('deadline').limit(5),
+          supabase.from('habits').select('*').eq('user_id', user.id).eq('status', 'active'),
+          supabase.from('habit_logs').select('*').eq('user_id', user.id).eq('date', today).eq('completed', true),
+          supabase.from('tasks').select('*').eq('user_id', user.id).eq('status', 'pending').order('due_date').limit(5),
+          supabase.from('transactions').select('*').eq('user_id', user.id).gte('date', monthStart).lte('date', today),
+        ])
 
-      setGoals((goalsRes.data || []) as Goal[])
-      setHabits((habitsRes.data || []) as Habit[])
-      setTodayHabitLogs((logsRes.data || []).map((l: any) => l.habit_id))
-      setTasks((tasksRes.data || []) as Task[])
+        setGoals((goalsRes.data || []) as Goal[])
+        setHabits((habitsRes.data || []) as Habit[])
+        setTodayHabitLogs((logsRes.data || []).map((l: any) => l.habit_id))
+        setTasks((tasksRes.data || []) as Task[])
 
-      const txns = (transactionsRes.data || []) as Transaction[]
-      setMonthIncome(txns.filter(t => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0))
-      setMonthExpense(txns.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0))
+        const txns = (transactionsRes.data || []) as Transaction[]
+        setMonthIncome(txns.filter(t => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0))
+        setMonthExpense(txns.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0))
+      } catch (err) {
+        console.error('Error loading dashboard data:', err)
+      }
     }
 
     fetchData()
-  }, [user])
+  }, [user?.id, supabase])
 
   const levelInfo = getLevelInfo(profile?.xp ?? 0)
   const daysRemaining = profile?.cycle_end_date

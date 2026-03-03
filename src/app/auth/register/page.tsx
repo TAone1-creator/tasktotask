@@ -30,13 +30,13 @@ export default function RegisterPage() {
 
       if (error) {
         setError(error.message)
-        setLoading(false)
         return
       }
 
       router.push('/onboarding')
     } catch {
       setError('Erro de conexão. Tente novamente.')
+    } finally {
       setLoading(false)
     }
   }
