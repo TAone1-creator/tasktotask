@@ -31,20 +31,26 @@ export default function NovoHabitoPage() {
     setLoading(true)
     setError('')
 
-    const { error: err } = await supabase.from('habits').insert({
-      user_id: user.id,
-      name,
-      frequency,
-      times_per_week: frequency === 'weekly' ? parseInt(timesPerWeek) : null,
-      goal_id: goalId || null,
-    })
+    try {
+      const { error: err } = await supabase.from('habits').insert({
+        user_id: user.id,
+        name,
+        frequency,
+        times_per_week: frequency === 'weekly' ? parseInt(timesPerWeek) : null,
+        goal_id: goalId || null,
+      })
 
-    if (err) {
-      setError(err.message || 'Erro ao criar hábito. Tente novamente.')
+      if (err) {
+        setError(err.message || 'Erro ao criar hábito. Tente novamente.')
+        return
+      }
+      router.push('/habitos')
+    } catch (err) {
+      console.error('Error creating habit:', err)
+      setError('Erro de conexão. Verifique sua internet e tente novamente.')
+    } finally {
       setLoading(false)
-      return
     }
-    router.push('/habitos')
   }
 
   return (

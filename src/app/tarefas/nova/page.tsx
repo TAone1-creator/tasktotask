@@ -35,23 +35,29 @@ export default function NovaTarefaPage() {
     setLoading(true)
     setError('')
 
-    const { error: err } = await supabase.from('tasks').insert({
-      user_id: user.id,
-      title,
-      description: description || null,
-      category,
-      priority,
-      due_date: dueDate || null,
-      recurrence,
-      goal_id: goalId || null,
-    })
+    try {
+      const { error: err } = await supabase.from('tasks').insert({
+        user_id: user.id,
+        title,
+        description: description || null,
+        category,
+        priority,
+        due_date: dueDate || null,
+        recurrence,
+        goal_id: goalId || null,
+      })
 
-    if (err) {
-      setError(err.message || 'Erro ao criar tarefa. Tente novamente.')
+      if (err) {
+        setError(err.message || 'Erro ao criar tarefa. Tente novamente.')
+        return
+      }
+      router.push('/tarefas')
+    } catch (err) {
+      console.error('Error creating task:', err)
+      setError('Erro de conexão. Verifique sua internet e tente novamente.')
+    } finally {
       setLoading(false)
-      return
     }
-    router.push('/tarefas')
   }
 
   return (

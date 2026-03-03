@@ -28,30 +28,36 @@ export default function NovaTransacaoPage() {
     setLoading(true)
     setError('')
 
-    const { error: err } = await supabase.from('transactions').insert({
-      user_id: user.id,
-      type,
-      amount: parseFloat(amount),
-      category,
-      description: description || null,
-      expense_type: type === 'expense' ? expenseType : null,
-      installment_current: expenseType === 'installment' ? parseInt(installmentCurrent) || null : null,
-      installment_total: expenseType === 'installment' ? parseInt(installmentTotal) || null : null,
-      date,
-    })
+    try {
+      const { error: err } = await supabase.from('transactions').insert({
+        user_id: user.id,
+        type,
+        amount: parseFloat(amount),
+        category,
+        description: description || null,
+        expense_type: type === 'expense' ? expenseType : null,
+        installment_current: expenseType === 'installment' ? parseInt(installmentCurrent) || null : null,
+        installment_total: expenseType === 'installment' ? parseInt(installmentTotal) || null : null,
+        date,
+      })
 
-    if (err) {
-      setError(err.message || 'Erro ao registrar transação. Tente novamente.')
+      if (err) {
+        setError(err.message || 'Erro ao registrar transação. Tente novamente.')
+        return
+      }
+
+      // Award XP for financial record
+      const { data: profile } = await supabase.from('profiles').select('xp').eq('id', user.id).single()
+      if (profile) {
+        await supabase.from('profiles').update({ xp: profile.xp + 3 }).eq('id', user.id)
+      }
+      router.push('/financas')
+    } catch (err) {
+      console.error('Error creating transaction:', err)
+      setError('Erro de conexão. Verifique sua internet e tente novamente.')
+    } finally {
       setLoading(false)
-      return
     }
-
-    // Award XP for financial record
-    const { data: profile } = await supabase.from('profiles').select('xp').eq('id', user.id).single()
-    if (profile) {
-      await supabase.from('profiles').update({ xp: profile.xp + 3 }).eq('id', user.id)
-    }
-    router.push('/financas')
   }
 
   const expenseCategories = FINANCIAL_CATEGORIES.filter(c => c.id !== 'renda')

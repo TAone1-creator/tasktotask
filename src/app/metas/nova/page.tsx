@@ -23,20 +23,26 @@ export default function NovaMetaPage() {
     setLoading(true)
     setError('')
 
-    const { error: err } = await supabase.from('goals').insert({
-      user_id: user.id,
-      title,
-      description: description || null,
-      type,
-      deadline,
-    })
+    try {
+      const { error: err } = await supabase.from('goals').insert({
+        user_id: user.id,
+        title,
+        description: description || null,
+        type,
+        deadline,
+      })
 
-    if (err) {
-      setError(err.message || 'Erro ao criar meta. Tente novamente.')
+      if (err) {
+        setError(err.message || 'Erro ao criar meta. Tente novamente.')
+        return
+      }
+      router.push('/metas')
+    } catch (err) {
+      console.error('Error creating goal:', err)
+      setError('Erro de conexão. Verifique sua internet e tente novamente.')
+    } finally {
       setLoading(false)
-      return
     }
-    router.push('/metas')
   }
 
   return (
