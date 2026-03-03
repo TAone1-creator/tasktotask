@@ -29,6 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const initialized = useRef(false)
+  const currentUserIdRef = useRef<string | null>(null)
 
   const fetchProfile = useCallback(async (userId: string) => {
     try {
@@ -44,27 +45,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [supabase])
 
   const refreshProfile = useCallback(async () => {
-    if (user) {
-      await fetchProfile(user.id)
+    if (currentUserIdRef.current) {
+      await fetchProfile(currentUserIdRef.current)
     }
-  }, [user, fetchProfile])
+  }, [fetchProfile])
 
   useEffect(() => {
     let mounted = true
 
     const init = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession()
+        // Use getUser() instead of getSession() to validate with the server
+        // and avoid stale/expired session data from localStorage
+        const { data: { user: validatedUser }, error } = await supabase.auth.getUser()
         if (!mounted) return
 
-        const currentUser = session?.user ?? null
-        setUser(currentUser)
-
-        if (currentUser) {
-          await fetchProfile(currentUser.id)
+        if (error || !validatedUser) {
+          setUser(null)
+          setProfile(null)
+          currentUserIdRef.current = null
+        } else {
+          setUser(validatedUser)
+          currentUserIdRef.current = validatedUser.id
+          await fetchProfile(validatedUser.id)
         }
       } catch {
-        // Not logged in
+        if (mounted) {
+          setUser(null)
+          setProfile(null)
+          currentUserIdRef.current = null
+        }
       }
 
       if (mounted) {
@@ -82,12 +92,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (event === 'INITIAL_SESSION') return
 
       const newUser = session?.user ?? null
-      setUser(newUser)
 
-      if (newUser) {
-        await fetchProfile(newUser.id)
-      } else {
+      // Only update state if user actually changed (prevents re-render loops on token refresh)
+      if (event === 'TOKEN_REFRESHED') {
+        // Token refreshed but same user - no need to update state
+        if (newUser?.id === currentUserIdRef.current) return
+      }
+
+      if (event === 'SIGNED_OUT') {
+        currentUserIdRef.current = null
+        setUser(null)
         setProfile(null)
+        return
+      }
+
+      // User changed (sign in, or different user)
+      if (newUser && newUser.id !== currentUserIdRef.current) {
+        currentUserIdRef.current = newUser.id
+        setUser(newUser)
+        await fetchProfile(newUser.id)
       }
     })
 
