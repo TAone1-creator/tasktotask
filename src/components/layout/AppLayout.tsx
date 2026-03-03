@@ -2,21 +2,31 @@
 
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import Sidebar from './Sidebar'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, profile, loading } = useAuth()
   const router = useRouter()
+  const redirecting = useRef(false)
 
   useEffect(() => {
-    if (!loading && !user) {
+    // Prevent redirect loops by only redirecting once
+    if (loading || redirecting.current) return
+
+    if (!user) {
+      redirecting.current = true
       router.push('/auth/login')
-    }
-    if (!loading && user && profile && !profile.onboarding_completed) {
+    } else if (profile && !profile.onboarding_completed) {
+      redirecting.current = true
       router.push('/onboarding')
     }
   }, [loading, user, profile, router])
+
+  // Reset redirect flag when user/profile changes (e.g., after login)
+  useEffect(() => {
+    redirecting.current = false
+  }, [user?.id, profile?.onboarding_completed])
 
   if (loading) {
     return (
