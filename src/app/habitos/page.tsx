@@ -2,7 +2,7 @@
 
 import AppLayout from '@/components/layout/AppLayout'
 import { useAuth } from '@/hooks/useAuth'
-import { useEffect, useState, useMemo, useCallback } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Plus, Repeat, Pause, Play } from 'lucide-react'
 import { format, subDays, eachDayOfInterval } from 'date-fns'
@@ -68,7 +68,6 @@ export default function HabitosPage() {
     setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, status: newStatus } : h))
   }
 
-  // Build a Set for O(1) log lookups instead of O(n) .some() on every check
   const logSet = useMemo(() => {
     const set = new Set<string>()
     for (const l of logs) {
