@@ -51,10 +51,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   if (!user) return null
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <Sidebar profile={profile} />
-      <main className="flex-1 lg:ml-0 min-h-screen">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-16 lg:pt-8">
+    <div className="min-h-screen bg-gray-50">
+      <Sidebar />
+      <main className="min-h-screen pb-28">
+        <div className="px-4 sm:px-6 lg:px-10 py-8">
           {children}
         </div>
       </main>
