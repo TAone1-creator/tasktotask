@@ -9,7 +9,7 @@ import { Camera, User } from 'lucide-react'
 import { getLevelInfo } from '@/lib/gamification'
 
 export default function PerfilPage() {
-  const { user, profile, supabase, refreshProfile } = useAuth()
+  const { user, profile, supabase, refreshProfile, avatarUrl } = useAuth()
   const router = useRouter()
   const [fullName, setFullName] = useState(profile?.full_name || '')
   const [saving, setSaving] = useState(false)
@@ -19,8 +19,8 @@ export default function PerfilPage() {
   const [uploadError, setUploadError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Use profile avatar_url as source of truth, avatarPreview only for instant feedback
-  const displayAvatar = avatarPreview || profile?.avatar_url || null
+  // avatarPreview for instant feedback, avatarUrl from context as source of truth
+  const displayAvatar = avatarPreview || avatarUrl
 
   const handleSave = async () => {
     if (!user) return
@@ -39,11 +39,12 @@ export default function PerfilPage() {
     setUploading(true)
     setUploadError(null)
 
-    // Show instant preview
+    // Instant preview while uploading
     const previewUrl = URL.createObjectURL(file)
     setAvatarPreview(previewUrl)
 
     try {
+      // 1. Upload file to Supabase Storage
       const fileExt = file.name.split('.').pop()
       const filePath = `${user.id}/avatar.${fileExt}`
 
@@ -52,34 +53,38 @@ export default function PerfilPage() {
         .upload(filePath, file, { upsert: true })
 
       if (storageError) {
-        console.error('Upload error:', storageError)
-        setUploadError('Erro ao enviar imagem. Verifique se o bucket "avatars" existe no Supabase Storage.')
+        console.error('Storage upload error:', storageError)
+        setUploadError(`Erro ao enviar imagem: ${storageError.message}`)
         setAvatarPreview(null)
         setUploading(false)
         return
       }
 
+      // 2. Get the public URL
       const { data: { publicUrl } } = supabase.storage
         .from('avatars')
         .getPublicUrl(filePath)
 
       const url = `${publicUrl}?t=${Date.now()}`
 
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update({ avatar_url: url })
-        .eq('id', user.id)
+      // 3. Save URL in Auth user_metadata (always works, no DB column needed)
+      const { error: authError } = await supabase.auth.updateUser({
+        data: { avatar_url: url }
+      })
 
-      if (updateError) {
-        console.error('Profile update error:', updateError)
-        setUploadError('Erro ao salvar URL do avatar no perfil. Verifique se a coluna "avatar_url" existe na tabela profiles.')
+      if (authError) {
+        console.error('Auth updateUser error:', authError)
+        setUploadError(`Erro ao salvar avatar: ${authError.message}`)
         setAvatarPreview(null)
         setUploading(false)
         return
       }
 
+      // 4. Also try to save in profiles table (best-effort, won't block on failure)
+      supabase.from('profiles').update({ avatar_url: url }).eq('id', user.id).then(() => {})
+
+      // 5. Refresh context so header/sidebar pick up the new avatar
       await refreshProfile()
-      // Clear preview since profile now has the real URL
       setAvatarPreview(null)
     } catch (err) {
       console.error('Avatar upload failed:', err)

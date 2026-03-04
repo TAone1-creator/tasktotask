@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth'
 import type { Profile } from '@/types/database'
 
 export default function Header({ profile }: { profile: Profile | null }) {
-  const { supabase } = useAuth()
+  const { supabase, avatarUrl } = useAuth()
   const router = useRouter()
 
   const fullName = profile?.full_name || 'Usuário'
@@ -41,8 +41,8 @@ export default function Header({ profile }: { profile: Profile | null }) {
             className="flex items-center gap-2 px-2 py-1 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors"
           >
             <div className="w-7 h-7 rounded-full overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center shrink-0">
-              {profile?.avatar_url ? (
-                <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="" className="w-full h-full object-cover" />
               ) : (
                 <User size={14} className="text-gray-400" />
               )}

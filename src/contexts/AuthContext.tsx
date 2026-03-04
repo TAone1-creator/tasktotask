@@ -11,6 +11,7 @@ interface AuthContextType {
   loading: boolean
   supabase: SupabaseClient
   refreshProfile: () => Promise<void>
+  avatarUrl: string | null
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -128,11 +129,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // keep existing profile on refresh failure
     }
+    // Also refresh user to pick up user_metadata changes (e.g. avatar_url)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session?.user) setUser(session.user)
+    } catch {
+      // keep existing user on refresh failure
+    }
   }, [supabase])
 
+  // Avatar URL: read from user_metadata (primary) or profile (fallback)
+  const avatarUrl = user?.user_metadata?.avatar_url || profile?.avatar_url || null
+
   const value = useMemo(
-    () => ({ user, profile, loading, supabase, refreshProfile }),
-    [user, profile, loading, supabase, refreshProfile]
+    () => ({ user, profile, loading, supabase, refreshProfile, avatarUrl }),
+    [user, profile, loading, supabase, refreshProfile, avatarUrl]
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
