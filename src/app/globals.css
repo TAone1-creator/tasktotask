@@ -33,11 +33,11 @@ body {
    ═══════════════════════════════════════════════════ */
 [data-theme="dark"] {
   /* Gray scale — pure black & white, zero color tint */
-  --color-white: #111111;
-  --color-gray-50: #161616;
-  --color-gray-100: #1e1e1e;
-  --color-gray-200: #282828;
-  --color-gray-300: #393939;
+  --color-white: #0a0a0a;
+  --color-gray-50: #0a0a0a;
+  --color-gray-100: #141414;
+  --color-gray-200: #1e1e1e;
+  --color-gray-300: #2e2e2e;
   --color-gray-400: #6e6e6e;
   --color-gray-500: #8a8a8a;
   --color-gray-600: #a3a3a3;
@@ -48,10 +48,10 @@ body {
   --color-black: #ffffff;
 
   /* Semantic theme tokens */
-  --color-surface: #111111;
+  --color-surface: #0a0a0a;
   --color-surface-secondary: #000000;
-  --color-surface-tertiary: #1e1e1e;
-  --color-border: #282828;
+  --color-surface-tertiary: #141414;
+  --color-border: #1e1e1e;
   --color-text-primary: #ffffff;
   --color-text-secondary: #8a8a8a;
   --color-text-tertiary: #6e6e6e;
