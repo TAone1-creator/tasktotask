@@ -47,7 +47,7 @@ export default function Header({ profile }: { profile: Profile | null }) {
   }, [themeOpen])
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-xl border-b border-gray-200/60 relative overflow-hidden">
+    <header className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-xl border-b border-gray-200/60 relative">
       <SakuraHeaderDecor />
       <div className="flex items-center justify-between h-14 px-4 sm:px-6 lg:px-10 relative z-10">
         {/* Left: Greeting */}
