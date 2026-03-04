@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 import Header from './Header'
 import Sidebar from './Sidebar'
+import SakuraPetals from '@/components/effects/SakuraPetals'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, profile, loading } = useAuth()
@@ -53,6 +54,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SakuraPetals />
       <Header profile={profile} />
       <Sidebar />
       <main className="min-h-screen pb-28">
