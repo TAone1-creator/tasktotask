@@ -15,8 +15,12 @@ export default function PerfilPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [uploading, setUploading] = useState(false)
-  const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || null)
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+  const [uploadError, setUploadError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Use profile avatar_url as source of truth, avatarPreview only for instant feedback
+  const displayAvatar = avatarPreview || profile?.avatar_url || null
 
   const handleSave = async () => {
     if (!user) return
@@ -33,16 +37,24 @@ export default function PerfilPage() {
     if (!file || !user) return
 
     setUploading(true)
+    setUploadError(null)
+
+    // Show instant preview
+    const previewUrl = URL.createObjectURL(file)
+    setAvatarPreview(previewUrl)
+
     try {
       const fileExt = file.name.split('.').pop()
       const filePath = `${user.id}/avatar.${fileExt}`
 
-      const { error: uploadError } = await supabase.storage
+      const { error: storageError } = await supabase.storage
         .from('avatars')
         .upload(filePath, file, { upsert: true })
 
-      if (uploadError) {
-        console.error('Upload error:', uploadError)
+      if (storageError) {
+        console.error('Upload error:', storageError)
+        setUploadError('Erro ao enviar imagem. Verifique se o bucket "avatars" existe no Supabase Storage.')
+        setAvatarPreview(null)
         setUploading(false)
         return
       }
@@ -52,11 +64,27 @@ export default function PerfilPage() {
         .getPublicUrl(filePath)
 
       const url = `${publicUrl}?t=${Date.now()}`
-      await supabase.from('profiles').update({ avatar_url: url }).eq('id', user.id)
-      setAvatarUrl(url)
-      refreshProfile()
+
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: url })
+        .eq('id', user.id)
+
+      if (updateError) {
+        console.error('Profile update error:', updateError)
+        setUploadError('Erro ao salvar URL do avatar no perfil. Verifique se a coluna "avatar_url" existe na tabela profiles.')
+        setAvatarPreview(null)
+        setUploading(false)
+        return
+      }
+
+      await refreshProfile()
+      // Clear preview since profile now has the real URL
+      setAvatarPreview(null)
     } catch (err) {
       console.error('Avatar upload failed:', err)
+      setUploadError('Erro inesperado ao enviar imagem.')
+      setAvatarPreview(null)
     }
     setUploading(false)
   }
@@ -78,8 +106,8 @@ export default function PerfilPage() {
         <div className="flex flex-col items-center mb-6">
           <div className="relative group">
             <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200 flex items-center justify-center">
-              {avatarUrl ? (
-                <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+              {displayAvatar ? (
+                <img src={displayAvatar} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
                 <User size={36} className="text-gray-300" />
               )}
@@ -100,6 +128,7 @@ export default function PerfilPage() {
             />
           </div>
           {uploading && <p className="text-xs text-gray-400 mt-2">Enviando...</p>}
+          {uploadError && <p className="text-xs text-red-500 mt-2">{uploadError}</p>}
           <p className="text-sm font-semibold text-gray-900 mt-3">{profile?.full_name || 'Usuario'}</p>
           <p className="text-xs text-gray-500">{profile?.email}</p>
         </div>
