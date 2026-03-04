@@ -7,6 +7,7 @@ import { User, LogOut, Sun, Moon, Flower2 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useTheme, THEME_PRESETS, type ThemeId } from '@/contexts/ThemeContext'
 import SakuraHeaderDecor from '@/components/effects/SakuraHeaderDecor'
+import { getLevelInfo } from '@/lib/gamification'
 import type { Profile } from '@/types/database'
 
 function ThemeIcon({ themeIcon, size = 14 }: { themeIcon: string; size?: number }) {
@@ -29,6 +30,7 @@ export default function Header({ profile }: { profile: Profile | null }) {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const fullName = profile?.full_name || 'Usuário'
+  const levelInfo = getLevelInfo(profile?.xp ?? 0)
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -51,10 +53,28 @@ export default function Header({ profile }: { profile: Profile | null }) {
       <SakuraHeaderDecor />
       <div className="flex items-center justify-between h-14 px-4 sm:px-6 lg:px-10 relative z-10">
         {/* Left: Greeting */}
-        <div className="flex items-center min-w-0">
+        <div className="flex items-center gap-3 min-w-0">
           <p className="text-sm text-gray-700 truncate">
             Olá, <span className="font-semibold text-gray-900">{fullName}</span>!
           </p>
+          <div className="hidden sm:flex items-center gap-2">
+            <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full whitespace-nowrap">
+              Nv. {levelInfo.currentLevel.level}
+            </span>
+            <div className="flex items-center gap-1.5">
+              <div className="w-20 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-indigo-500 rounded-full transition-all duration-500"
+                  style={{ width: `${levelInfo.progressPercent}%` }}
+                />
+              </div>
+              {levelInfo.nextLevel && (
+                <span className="text-[10px] text-gray-400 whitespace-nowrap">
+                  {Math.round(levelInfo.progressPercent)}%
+                </span>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Center: Logo */}
