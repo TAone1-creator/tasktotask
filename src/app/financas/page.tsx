@@ -6,14 +6,19 @@ import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Plus, TrendingUp, TrendingDown, Wallet, PiggyBank, ChevronLeft, ChevronRight } from 'lucide-react'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'
+import { useTheme } from '@/contexts/ThemeContext'
 import { FINANCIAL_CATEGORIES } from '@/lib/constants'
 import type { Transaction, SavingsBox } from '@/types/database'
 
-const CHART_COLORS = ['#111827', '#374151', '#6B7280', '#9CA3AF', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
+const CHART_COLORS_LIGHT = ['#111827', '#374151', '#6B7280', '#9CA3AF', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
+const CHART_COLORS_DARK = ['#ffffff', '#c4c4c4', '#8a8a8a', '#6e6e6e', '#5a9ad5', '#3dbb63', '#d4b840', '#e05555', '#c0a0e0']
 const MONTH_NAMES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
 
 export default function FinancasPage() {
   const { user, supabase } = useAuth()
+  const { theme } = useTheme()
+  const isDark = theme === 'dark'
+  const CHART_COLORS = isDark ? CHART_COLORS_DARK : CHART_COLORS_LIGHT
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [savingsBoxes, setSavingsBoxes] = useState<SavingsBox[]>([])
   const [loading, setLoading] = useState(true)
@@ -172,7 +177,7 @@ export default function FinancasPage() {
                       <Pie data={pieData} cx="50%" cy="50%" innerRadius={55} outerRadius={85} paddingAngle={3} dataKey="value">
                         {pieData.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
                       </Pie>
-                      <Tooltip formatter={(value) => [`R$ ${Number(value).toFixed(2)}`, '']} contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb', fontSize: '12px' }} />
+                      <Tooltip formatter={(value) => [`R$ ${Number(value).toFixed(2)}`, '']} contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #282828' : '1px solid #e5e7eb', fontSize: '12px', backgroundColor: isDark ? '#111111' : '#ffffff', color: isDark ? '#ffffff' : '#111827' }} />
                     </PieChart>
                   </ResponsiveContainer>
                   <div className="flex flex-wrap gap-3 mt-2 justify-center">
@@ -195,12 +200,12 @@ export default function FinancasPage() {
               ) : (
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={barData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                    <XAxis dataKey="day" tick={{ fontSize: 10, fill: '#9ca3af' }} axisLine={false} tickLine={false} interval={Math.floor(barData.length / 8)} />
-                    <YAxis tick={{ fontSize: 10, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-                    <Tooltip formatter={(value, name) => [`R$ ${Number(value).toFixed(2)}`, name]} contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb', fontSize: '12px' }} />
-                    <Bar dataKey="Gastos" fill="#EF4444" radius={[3, 3, 0, 0]} />
-                    <Bar dataKey="Ganhos" fill="#10B981" radius={[3, 3, 0, 0]} />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#1e1e1e' : '#f3f4f6'} />
+                    <XAxis dataKey="day" tick={{ fontSize: 10, fill: isDark ? '#6e6e6e' : '#9ca3af' }} axisLine={false} tickLine={false} interval={Math.floor(barData.length / 8)} />
+                    <YAxis tick={{ fontSize: 10, fill: isDark ? '#6e6e6e' : '#9ca3af' }} axisLine={false} tickLine={false} />
+                    <Tooltip formatter={(value, name) => [`R$ ${Number(value).toFixed(2)}`, name]} contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #282828' : '1px solid #e5e7eb', fontSize: '12px', backgroundColor: isDark ? '#111111' : '#ffffff', color: isDark ? '#ffffff' : '#111827' }} />
+                    <Bar dataKey="Gastos" fill={isDark ? '#e05555' : '#EF4444'} radius={[3, 3, 0, 0]} />
+                    <Bar dataKey="Ganhos" fill={isDark ? '#3dbb63' : '#10B981'} radius={[3, 3, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               )}

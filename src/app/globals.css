@@ -32,67 +32,67 @@ body {
    without touching any component file.
    ═══════════════════════════════════════════════════ */
 [data-theme="dark"] {
-  /* Gray scale — pure black & white, no blue tint (Notion-style) */
-  --color-white: #191919;
-  --color-gray-50: #202020;
-  --color-gray-100: #2c2c2c;
-  --color-gray-200: #3a3a3a;
-  --color-gray-300: #4e4e4e;
-  --color-gray-400: #7a7a7a;
-  --color-gray-500: #999999;
-  --color-gray-600: #b0b0b0;
-  --color-gray-700: #c8c8c8;
+  /* Gray scale — pure black & white, zero color tint */
+  --color-white: #111111;
+  --color-gray-50: #161616;
+  --color-gray-100: #1e1e1e;
+  --color-gray-200: #282828;
+  --color-gray-300: #393939;
+  --color-gray-400: #6e6e6e;
+  --color-gray-500: #8a8a8a;
+  --color-gray-600: #a3a3a3;
+  --color-gray-700: #c4c4c4;
   --color-gray-800: #e0e0e0;
-  --color-gray-900: #ededee;
-  --color-gray-950: #f7f7f7;
+  --color-gray-900: #ffffff;
+  --color-gray-950: #ffffff;
   --color-black: #ffffff;
 
   /* Semantic theme tokens */
-  --color-surface: #191919;
-  --color-surface-secondary: #111111;
-  --color-surface-tertiary: #2c2c2c;
-  --color-border: #3a3a3a;
-  --color-text-primary: #ededee;
-  --color-text-secondary: #999999;
-  --color-text-tertiary: #7a7a7a;
+  --color-surface: #111111;
+  --color-surface-secondary: #000000;
+  --color-surface-tertiary: #1e1e1e;
+  --color-border: #282828;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #8a8a8a;
+  --color-text-tertiary: #6e6e6e;
 
-  /* Accent colors — muted for dark backgrounds, no glow */
-  --color-green-50: #1a2e1a;
-  --color-green-100: #243d24;
-  --color-green-500: #4caf6e;
-  --color-green-600: #6bc988;
-  --color-green-700: #a3e0b5;
+  /* Accent colors — same hues, adjusted for black bg */
+  --color-green-50: #0a1f0a;
+  --color-green-100: #102e10;
+  --color-green-500: #3dbb63;
+  --color-green-600: #4ece76;
+  --color-green-700: #86e09e;
 
-  --color-red-50: #2e1a1a;
-  --color-red-100: #3d2424;
-  --color-red-400: #e06060;
-  --color-red-500: #d44;
-  --color-red-600: #e88;
-  --color-red-700: #f5baba;
+  --color-red-50: #1f0a0a;
+  --color-red-100: #2e1010;
+  --color-red-400: #e05555;
+  --color-red-500: #d43d3d;
+  --color-red-600: #e87777;
+  --color-red-700: #f0a8a8;
 
-  --color-blue-50: #1a2230;
-  --color-blue-100: #243044;
-  --color-blue-500: #6a9fd8;
-  --color-blue-600: #8cb8e8;
-  --color-blue-700: #b8d4f0;
+  --color-blue-50: #0a1420;
+  --color-blue-100: #101e30;
+  --color-blue-500: #5a9ad5;
+  --color-blue-600: #7ab4e8;
+  --color-blue-700: #a8d0f0;
 
-  --color-yellow-50: #2e2a1a;
-  --color-yellow-100: #3d3624;
+  --color-yellow-50: #1f1a0a;
+  --color-yellow-100: #2e2610;
   --color-yellow-400: #d4b840;
   --color-yellow-500: #c0a020;
-  --color-yellow-700: #e8d888;
+  --color-yellow-700: #e0d070;
 
-  --color-orange-50: #2e241a;
-  --color-orange-100: #3d3024;
-  --color-orange-600: #d8a070;
-  --color-orange-700: #e8c0a0;
+  --color-orange-50: #1f160a;
+  --color-orange-100: #2e2010;
+  --color-orange-600: #d89860;
+  --color-orange-700: #e0b888;
 
-  --color-purple-100: #302040;
-  --color-purple-700: #c8a8e8;
+  --color-purple-100: #201030;
+  --color-purple-700: #c0a0e0;
 
-  /* Primary stays readable */
-  --color-primary: #ededee;
-  --color-primary-light: #2c2c2c;
+  /* Primary */
+  --color-primary: #ffffff;
+  --color-primary-light: #1e1e1e;
 
   color-scheme: dark;
 }
