@@ -7,6 +7,7 @@ export default function SakuraBackground() {
 
   if (theme === 'sakura-light') return <SakuraLightBg />
   if (theme === 'sakura-dark') return <SakuraDarkBg />
+  if (theme === 'raibo') return <RaiboBg />
   return null
 }
 
@@ -67,6 +68,61 @@ function SakuraDarkBg() {
         }}
       />
 
+    </div>
+  )
+}
+
+function RaiboBg() {
+  return (
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+      {/* Deep dark base */}
+      <div className="absolute inset-0" style={{ background: '#06060c' }} />
+
+      {/* Subtle colored glow spots */}
+      <div
+        className="absolute"
+        style={{
+          top: '-80px',
+          left: '20%',
+          width: '400px',
+          height: '250px',
+          borderRadius: '50%',
+          background: 'radial-gradient(ellipse, rgba(232,84,107,0.08) 0%, transparent 70%)',
+        }}
+      />
+      <div
+        className="absolute"
+        style={{
+          top: '30%',
+          right: '10%',
+          width: '350px',
+          height: '350px',
+          borderRadius: '50%',
+          background: 'radial-gradient(ellipse, rgba(75,168,219,0.06) 0%, transparent 70%)',
+        }}
+      />
+      <div
+        className="absolute"
+        style={{
+          bottom: '10%',
+          left: '15%',
+          width: '300px',
+          height: '300px',
+          borderRadius: '50%',
+          background: 'radial-gradient(ellipse, rgba(61,201,110,0.05) 0%, transparent 70%)',
+        }}
+      />
+      <div
+        className="absolute"
+        style={{
+          top: '10%',
+          right: '30%',
+          width: '250px',
+          height: '250px',
+          borderRadius: '50%',
+          background: 'radial-gradient(ellipse, rgba(245,183,49,0.05) 0%, transparent 70%)',
+        }}
+      />
     </div>
   )
 }

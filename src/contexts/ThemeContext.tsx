@@ -2,13 +2,13 @@
 
 import { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react'
 
-export type ThemeId = 'light' | 'dark' | 'sakura-light' | 'sakura-dark'
+export type ThemeId = 'light' | 'dark' | 'sakura-light' | 'sakura-dark' | 'raibo'
 
 export interface ThemePreset {
   id: ThemeId
   name: string
   description: string
-  icon: 'sun' | 'moon' | 'flower' | 'flower-dark'
+  icon: 'sun' | 'moon' | 'flower' | 'flower-dark' | 'rainbow'
 }
 
 export const THEME_PRESETS: ThemePreset[] = [
@@ -16,6 +16,7 @@ export const THEME_PRESETS: ThemePreset[] = [
   { id: 'dark', name: 'Escuro', description: 'Tema escuro', icon: 'moon' },
   { id: 'sakura-light', name: 'Sakura', description: 'Cerejeira claro', icon: 'flower' },
   { id: 'sakura-dark', name: 'Sakura Dark', description: 'Cerejeira escuro', icon: 'flower-dark' },
+  { id: 'raibo', name: 'Raibo', description: 'Escuro com cores vibrantes', icon: 'rainbow' },
 ]
 
 export function isSakuraTheme(theme: ThemeId) {
