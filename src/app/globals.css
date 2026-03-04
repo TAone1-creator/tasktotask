@@ -229,6 +229,85 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════
+   RAIBO THEME — dark base, vibrant rainbow accents
+   ═══════════════════════════════════════════════════ */
+[data-theme="raibo"] {
+  /* Gray scale — deep dark navy-black */
+  --color-white: #0b0b14;
+  --color-gray-50: #0b0b14;
+  --color-gray-100: #12121e;
+  --color-gray-200: #1c1c2e;
+  --color-gray-300: #2a2a40;
+  --color-gray-400: #5e5e7a;
+  --color-gray-500: #8080a0;
+  --color-gray-600: #a0a0b8;
+  --color-gray-700: #c0c0d4;
+  --color-gray-800: #dcdce8;
+  --color-gray-900: #f0f0f6;
+  --color-gray-950: #f8f8fc;
+  --color-black: #f8f8fc;
+
+  /* Semantic tokens */
+  --color-surface: #0b0b14;
+  --color-surface-secondary: #06060c;
+  --color-surface-tertiary: #12121e;
+  --color-border: #1c1c2e;
+  --color-text-primary: #f0f0f6;
+  --color-text-secondary: #8080a0;
+  --color-text-tertiary: #5e5e7a;
+
+  /* Primary — coral/pink from the palette */
+  --color-primary: #E8546B;
+  --color-primary-light: #1c1c2e;
+
+  /* Green — vibrant green from palette */
+  --color-green-50: #0a1a0f;
+  --color-green-100: #102e18;
+  --color-green-500: #3DC96E;
+  --color-green-600: #52d880;
+  --color-green-700: #7ae4a0;
+
+  /* Red — coral/pink from palette */
+  --color-red-50: #1a0a0e;
+  --color-red-100: #2e1018;
+  --color-red-400: #E8546B;
+  --color-red-500: #d84060;
+  --color-red-600: #f07888;
+  --color-red-700: #f8a0ac;
+
+  /* Blue — bright blue from palette */
+  --color-blue-50: #0a1220;
+  --color-blue-100: #101e34;
+  --color-blue-500: #4BA8DB;
+  --color-blue-600: #6abce8;
+  --color-blue-700: #98d4f0;
+
+  /* Yellow — warm amber from palette */
+  --color-yellow-50: #1a160a;
+  --color-yellow-100: #2e2410;
+  --color-yellow-400: #F5B731;
+  --color-yellow-500: #daa020;
+  --color-yellow-700: #f0d060;
+
+  /* Orange — between coral and amber */
+  --color-orange-50: #1a120a;
+  --color-orange-100: #2e1e10;
+  --color-orange-600: #e09050;
+  --color-orange-700: #f0b070;
+
+  /* Purple — vivid purple accent */
+  --color-purple-100: #1e1030;
+  --color-purple-700: #b88ce8;
+
+  /* Indigo — for level badge */
+  --color-indigo-50: #12121e;
+  --color-indigo-500: #4BA8DB;
+  --color-indigo-600: #6abce8;
+
+  color-scheme: dark;
+}
+
+/* ═══════════════════════════════════════════════════
    SAKURA PETAL ANIMATION
    ═══════════════════════════════════════════════════ */
 .sakura-petal {

@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState, useRef, useEffect } from 'react'
-import { User, LogOut, Sun, Moon, Flower2 } from 'lucide-react'
+import { User, LogOut, Sun, Moon, Flower2, Rainbow } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useTheme, THEME_PRESETS, type ThemeId } from '@/contexts/ThemeContext'
 import SakuraHeaderDecor from '@/components/effects/SakuraHeaderDecor'
@@ -13,12 +13,14 @@ import type { Profile } from '@/types/database'
 function ThemeIcon({ themeIcon, size = 14 }: { themeIcon: string; size?: number }) {
   if (themeIcon === 'sun') return <Sun size={size} />
   if (themeIcon === 'moon') return <Moon size={size} />
+  if (themeIcon === 'rainbow') return <Rainbow size={size} />
   return <Flower2 size={size} />
 }
 
 function CurrentIcon({ theme }: { theme: ThemeId }) {
   if (theme === 'dark') return <Moon size={16} />
   if (theme === 'sakura-light' || theme === 'sakura-dark') return <Flower2 size={16} />
+  if (theme === 'raibo') return <Rainbow size={16} />
   return <Sun size={16} />
 }
 
