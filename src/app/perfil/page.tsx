@@ -4,11 +4,8 @@ import AppLayout from '@/components/layout/AppLayout'
 import { useAuth } from '@/hooks/useAuth'
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { differenceInDays, format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 import Link from 'next/link'
 import { Camera, User } from 'lucide-react'
-import { LIFE_CONTEXTS } from '@/lib/constants'
 import { getLevelInfo } from '@/lib/gamification'
 
 export default function PerfilPage() {
@@ -70,21 +67,6 @@ export default function PerfilPage() {
     router.push('/')
   }
 
-  const daysRemaining = profile?.cycle_end_date
-    ? differenceInDays(new Date(profile.cycle_end_date), new Date())
-    : null
-
-  const daysElapsed = profile?.cycle_start_date
-    ? differenceInDays(new Date(), new Date(profile.cycle_start_date))
-    : 0
-
-  const totalDays = profile?.cycle_start_date && profile?.cycle_end_date
-    ? differenceInDays(new Date(profile.cycle_end_date), new Date(profile.cycle_start_date))
-    : 1
-
-  const cycleProgress = Math.min((daysElapsed / totalDays) * 100, 100)
-
-  const contextLabel = LIFE_CONTEXTS.find(c => c.id === profile?.context)?.label || profile?.context || 'Nao definido'
   const levelInfo = getLevelInfo(profile?.xp ?? 0)
 
   return (
@@ -122,64 +104,6 @@ export default function PerfilPage() {
           <p className="text-xs text-gray-500">{profile?.email}</p>
         </div>
 
-        {/* Cycle Info */}
-        <div className="bg-white rounded-xl border border-gray-100 p-5 mb-6">
-          <h2 className="text-sm font-semibold text-gray-900 mb-3">Seu Ciclo</h2>
-          <div className="space-y-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Contexto</span>
-              <span className="text-gray-900 font-medium">{contextLabel}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Duracao</span>
-              <span className="text-gray-900 font-medium">{profile?.cycle_months || 3} meses</span>
-            </div>
-            {profile?.cycle_start_date && (
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Inicio</span>
-                <span className="text-gray-900 font-medium">
-                  {format(new Date(profile.cycle_start_date), "d 'de' MMMM 'de' yyyy", { locale: ptBR })}
-                </span>
-              </div>
-            )}
-            {profile?.cycle_end_date && (
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Termino</span>
-                <span className="text-gray-900 font-medium">
-                  {format(new Date(profile.cycle_end_date), "d 'de' MMMM 'de' yyyy", { locale: ptBR })}
-                </span>
-              </div>
-            )}
-            {daysRemaining !== null && (
-              <>
-                <div className="w-full bg-gray-100 rounded-full h-2">
-                  <div className="bg-gray-900 h-2 rounded-full transition-all" style={{ width: `${cycleProgress}%` }} />
-                </div>
-                <p className="text-xs text-gray-400 text-center">
-                  {daysRemaining > 0 ? `${daysRemaining} dias restantes` : 'Ciclo encerrado'}
-                </p>
-              </>
-            )}
-          </div>
-
-          {daysRemaining !== null && daysRemaining <= 30 && daysRemaining > 0 && (
-            <Link href="/encerramento" className="mt-4 block w-full py-2.5 text-center bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800">
-              Ver relatorio de encerramento
-            </Link>
-          )}
-        </div>
-
-        {/* Level */}
-        <div className="bg-white rounded-xl border border-gray-100 p-5 mb-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-sm font-semibold text-gray-900">Nivel {levelInfo.currentLevel.level} — {levelInfo.currentLevel.name}</p>
-              <p className="text-xs text-gray-500">{profile?.xp ?? 0} XP total</p>
-            </div>
-            <Link href="/gamificacao" className="text-xs text-gray-900 font-medium hover:underline">Ver detalhes</Link>
-          </div>
-        </div>
-
         {/* Edit Profile */}
         <div className="bg-white rounded-xl border border-gray-100 p-5 mb-6">
           <h2 className="text-sm font-semibold text-gray-900 mb-3">Dados Pessoais</h2>
@@ -204,6 +128,17 @@ export default function PerfilPage() {
             >
               {saving ? 'Salvando...' : saved ? 'Salvo!' : 'Salvar'}
             </button>
+          </div>
+        </div>
+
+        {/* Level */}
+        <div className="bg-white rounded-xl border border-gray-100 p-5 mb-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-sm font-semibold text-gray-900">Nível {levelInfo.currentLevel.level} — {levelInfo.currentLevel.name}</p>
+              <p className="text-xs text-gray-500">{profile?.xp ?? 0} XP total</p>
+            </div>
+            <Link href="/gamificacao" className="text-xs text-gray-900 font-medium hover:underline">Ver detalhes</Link>
           </div>
         </div>
 

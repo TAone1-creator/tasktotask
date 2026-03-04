@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { User, LogOut } from 'lucide-react'
-import { getLevelInfo } from '@/lib/gamification'
 import { useAuth } from '@/hooks/useAuth'
 import type { Profile } from '@/types/database'
 
@@ -11,8 +10,7 @@ export default function Header({ profile }: { profile: Profile | null }) {
   const { supabase } = useAuth()
   const router = useRouter()
 
-  const levelInfo = profile ? getLevelInfo(profile.xp) : null
-  const firstName = profile?.full_name?.split(' ')[0] || 'Usuario'
+  const fullName = profile?.full_name || 'Usuário'
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -22,26 +20,11 @@ export default function Header({ profile }: { profile: Profile | null }) {
   return (
     <header className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-xl border-b border-gray-200/60">
       <div className="flex items-center justify-between h-14 px-4 sm:px-6 lg:px-10">
-        {/* Left: Greeting + Level */}
-        <div className="flex items-center gap-4 min-w-0">
+        {/* Left: Greeting */}
+        <div className="flex items-center min-w-0">
           <p className="text-sm text-gray-700 truncate">
-            Ola, <span className="font-semibold text-gray-900">{firstName}</span>
+            Olá, <span className="font-semibold text-gray-900">{fullName}</span>!
           </p>
-          {levelInfo && (
-            <div className="hidden sm:flex items-center gap-2.5">
-              <div className="flex items-center gap-1.5 bg-gray-100 rounded-full px-2.5 py-1">
-                <span className="text-[10px] font-bold text-gray-900">Nv {levelInfo.currentLevel.level}</span>
-                <span className="text-[10px] text-gray-500 hidden md:inline">{levelInfo.currentLevel.name}</span>
-              </div>
-              <div className="w-24 bg-gray-100 rounded-full h-1.5">
-                <div
-                  className="bg-gray-900 h-1.5 rounded-full transition-all"
-                  style={{ width: `${levelInfo.progressPercent}%` }}
-                />
-              </div>
-              <span className="text-[10px] text-gray-400">{profile!.xp} XP</span>
-            </div>
-          )}
         </div>
 
         {/* Center: Logo */}
