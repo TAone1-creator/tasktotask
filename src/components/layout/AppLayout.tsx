@@ -3,6 +3,7 @@
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter, usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
+import Header from './Header'
 import Sidebar from './Sidebar'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -52,9 +53,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Header profile={profile} />
       <Sidebar />
       <main className="min-h-screen pb-28">
-        <div className="px-4 sm:px-6 lg:px-10 py-8">
+        <div className="px-4 sm:px-6 lg:px-10 py-6">
           {children}
         </div>
       </main>
