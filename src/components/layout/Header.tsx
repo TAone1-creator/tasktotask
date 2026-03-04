@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from 'react'
 import { User, LogOut, Sun, Moon, Flower2 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useTheme, THEME_PRESETS, type ThemeId } from '@/contexts/ThemeContext'
+import SakuraHeaderDecor from '@/components/effects/SakuraHeaderDecor'
 import type { Profile } from '@/types/database'
 
 function ThemeIcon({ themeIcon, size = 14 }: { themeIcon: string; size?: number }) {
@@ -46,8 +47,9 @@ export default function Header({ profile }: { profile: Profile | null }) {
   }, [themeOpen])
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-xl border-b border-gray-200/60">
-      <div className="flex items-center justify-between h-14 px-4 sm:px-6 lg:px-10">
+    <header className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-xl border-b border-gray-200/60 relative overflow-hidden">
+      <SakuraHeaderDecor />
+      <div className="flex items-center justify-between h-14 px-4 sm:px-6 lg:px-10 relative z-10">
         {/* Left: Greeting */}
         <div className="flex items-center min-w-0">
           <p className="text-sm text-gray-700 truncate">

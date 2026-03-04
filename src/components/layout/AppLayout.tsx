@@ -6,6 +6,7 @@ import { useEffect, useRef } from 'react'
 import Header from './Header'
 import Sidebar from './Sidebar'
 import SakuraPetals from '@/components/effects/SakuraPetals'
+import SakuraBackground from '@/components/effects/SakuraBackground'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, profile, loading } = useAuth()
@@ -53,11 +54,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   if (!user) return null
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 relative">
+      <SakuraBackground />
       <SakuraPetals />
       <Header profile={profile} />
       <Sidebar />
-      <main className="min-h-screen pb-28">
+      <main className="min-h-screen pb-28 relative z-10">
         <div className="px-4 sm:px-6 lg:px-10 py-6">
           {children}
         </div>
