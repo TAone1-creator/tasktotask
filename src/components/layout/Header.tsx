@@ -3,14 +3,21 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState, useRef, useEffect } from 'react'
-import { User, LogOut, Palette, Sun, Moon } from 'lucide-react'
+import { User, LogOut, Sun, Moon, Flower2 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useTheme, THEME_PRESETS, type ThemeId } from '@/contexts/ThemeContext'
 import type { Profile } from '@/types/database'
 
-const themeIcons: Record<ThemeId, typeof Sun> = {
-  light: Sun,
-  dark: Moon,
+function ThemeIcon({ themeIcon, size = 14 }: { themeIcon: string; size?: number }) {
+  if (themeIcon === 'sun') return <Sun size={size} />
+  if (themeIcon === 'moon') return <Moon size={size} />
+  return <Flower2 size={size} />
+}
+
+function CurrentIcon({ theme }: { theme: ThemeId }) {
+  if (theme === 'dark') return <Moon size={16} />
+  if (theme === 'sakura-light' || theme === 'sakura-dark') return <Flower2 size={16} />
+  return <Sun size={16} />
 }
 
 export default function Header({ profile }: { profile: Profile | null }) {
@@ -38,8 +45,6 @@ export default function Header({ profile }: { profile: Profile | null }) {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [themeOpen])
 
-  const CurrentThemeIcon = themeIcons[theme]
-
   return (
     <header className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-xl border-b border-gray-200/60">
       <div className="flex items-center justify-between h-14 px-4 sm:px-6 lg:px-10">
@@ -66,12 +71,11 @@ export default function Header({ profile }: { profile: Profile | null }) {
               className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
               title="Trocar tema"
             >
-              <CurrentThemeIcon size={16} />
+              <CurrentIcon theme={theme} />
             </button>
             {themeOpen && (
-              <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-gray-200 rounded-xl shadow-lg shadow-black/[0.08] py-1 animate-scale-in z-50">
+              <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-gray-200 rounded-xl shadow-lg shadow-black/[0.08] py-1 animate-scale-in z-50">
                 {THEME_PRESETS.map((preset) => {
-                  const Icon = themeIcons[preset.id]
                   const isActive = theme === preset.id
                   return (
                     <button
@@ -86,7 +90,7 @@ export default function Header({ profile }: { profile: Profile | null }) {
                           : 'text-gray-600 hover:bg-gray-50'
                       }`}
                     >
-                      <Icon size={14} />
+                      <ThemeIcon themeIcon={preset.icon} />
                       <span>{preset.name}</span>
                     </button>
                   )

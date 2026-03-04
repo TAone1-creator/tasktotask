@@ -33,11 +33,11 @@ body {
    ═══════════════════════════════════════════════════ */
 [data-theme="dark"] {
   /* Gray scale — pure black & white, zero color tint */
-  --color-white: #111111;
-  --color-gray-50: #161616;
-  --color-gray-100: #1e1e1e;
-  --color-gray-200: #282828;
-  --color-gray-300: #393939;
+  --color-white: #0a0a0a;
+  --color-gray-50: #0a0a0a;
+  --color-gray-100: #141414;
+  --color-gray-200: #1e1e1e;
+  --color-gray-300: #2e2e2e;
   --color-gray-400: #6e6e6e;
   --color-gray-500: #8a8a8a;
   --color-gray-600: #a3a3a3;
@@ -48,10 +48,10 @@ body {
   --color-black: #ffffff;
 
   /* Semantic theme tokens */
-  --color-surface: #111111;
+  --color-surface: #0a0a0a;
   --color-surface-secondary: #000000;
-  --color-surface-tertiary: #1e1e1e;
-  --color-border: #282828;
+  --color-surface-tertiary: #141414;
+  --color-border: #1e1e1e;
   --color-text-primary: #ffffff;
   --color-text-secondary: #8a8a8a;
   --color-text-tertiary: #6e6e6e;
@@ -95,6 +95,164 @@ body {
   --color-primary-light: #1e1e1e;
 
   color-scheme: dark;
+}
+
+/* ═══════════════════════════════════════════════════
+   SAKURA LIGHT THEME
+   ═══════════════════════════════════════════════════ */
+[data-theme="sakura-light"] {
+  --color-white: #fff8f9;
+  --color-gray-50: #fff0f3;
+  --color-gray-100: #ffe4ea;
+  --color-gray-200: #f5c6d0;
+  --color-gray-300: #e8a8b8;
+  --color-gray-400: #c4899a;
+  --color-gray-500: #a06b7c;
+  --color-gray-600: #7d4f5e;
+  --color-gray-700: #5e3848;
+  --color-gray-800: #3d2030;
+  --color-gray-900: #2d1420;
+  --color-gray-950: #1f0a14;
+  --color-black: #1a0810;
+
+  --color-surface: #fff8f9;
+  --color-surface-secondary: #fff0f3;
+  --color-surface-tertiary: #ffe4ea;
+  --color-border: #f5c6d0;
+  --color-text-primary: #2d1420;
+  --color-text-secondary: #7d4f5e;
+  --color-text-tertiary: #a06b7c;
+
+  --color-primary: #d14d72;
+  --color-primary-light: #ffe4ea;
+
+  --color-green-50: #f0fdf4;
+  --color-green-100: #dcfce7;
+  --color-green-500: #22c55e;
+  --color-green-600: #16a34a;
+  --color-green-700: #15803d;
+
+  --color-red-50: #fff1f2;
+  --color-red-100: #ffe4e6;
+  --color-red-400: #fb7185;
+  --color-red-500: #f43f5e;
+  --color-red-600: #e11d48;
+  --color-red-700: #be123c;
+
+  --color-blue-50: #f0f4ff;
+  --color-blue-100: #dde4ff;
+  --color-blue-500: #6880d8;
+  --color-blue-600: #4f60c0;
+  --color-blue-700: #3a48a0;
+
+  --color-yellow-50: #fefce8;
+  --color-yellow-100: #fef9c3;
+  --color-yellow-400: #facc15;
+  --color-yellow-500: #eab308;
+  --color-yellow-700: #a16207;
+
+  --color-orange-50: #fff7ed;
+  --color-orange-100: #ffedd5;
+  --color-orange-600: #ea580c;
+  --color-orange-700: #c2410c;
+
+  --color-purple-100: #f3e8ff;
+  --color-purple-700: #7e22ce;
+}
+
+/* ═══════════════════════════════════════════════════
+   SAKURA DARK THEME
+   ═══════════════════════════════════════════════════ */
+[data-theme="sakura-dark"] {
+  --color-white: #1a0c10;
+  --color-gray-50: #1a0c10;
+  --color-gray-100: #251418;
+  --color-gray-200: #351e24;
+  --color-gray-300: #4a2c34;
+  --color-gray-400: #8a5868;
+  --color-gray-500: #a87080;
+  --color-gray-600: #c89098;
+  --color-gray-700: #e0b0b8;
+  --color-gray-800: #f0d0d4;
+  --color-gray-900: #ffeaee;
+  --color-gray-950: #fff5f7;
+  --color-black: #fff5f7;
+
+  --color-surface: #1a0c10;
+  --color-surface-secondary: #0e0608;
+  --color-surface-tertiary: #251418;
+  --color-border: #351e24;
+  --color-text-primary: #ffeaee;
+  --color-text-secondary: #a87080;
+  --color-text-tertiary: #8a5868;
+
+  --color-primary: #ff8fa3;
+  --color-primary-light: #351e24;
+
+  --color-green-50: #0a1f0c;
+  --color-green-100: #102e14;
+  --color-green-500: #4cce6e;
+  --color-green-600: #6edd88;
+  --color-green-700: #a0f0b5;
+
+  --color-red-50: #2a0a0e;
+  --color-red-100: #3d1018;
+  --color-red-400: #f06080;
+  --color-red-500: #e44060;
+  --color-red-600: #f08090;
+  --color-red-700: #f8b0b8;
+
+  --color-blue-50: #0c0a20;
+  --color-blue-100: #141030;
+  --color-blue-500: #7090e0;
+  --color-blue-600: #90a8f0;
+  --color-blue-700: #b8c8f8;
+
+  --color-yellow-50: #201a0a;
+  --color-yellow-100: #302610;
+  --color-yellow-400: #e0c840;
+  --color-yellow-500: #d0b020;
+  --color-yellow-700: #f0e070;
+
+  --color-orange-50: #201408;
+  --color-orange-100: #302010;
+  --color-orange-600: #e0a060;
+  --color-orange-700: #f0c088;
+
+  --color-purple-100: #281440;
+  --color-purple-700: #d0a8f0;
+
+  color-scheme: dark;
+}
+
+/* ═══════════════════════════════════════════════════
+   SAKURA PETAL ANIMATION
+   ═══════════════════════════════════════════════════ */
+.sakura-petal {
+  width: 10px;
+  height: 10px;
+  top: -20px;
+  background: var(--petal-color, rgba(255,140,160,0.5));
+  border-radius: 10px 0;
+  animation: sakuraFall linear infinite;
+  opacity: 0;
+}
+
+@keyframes sakuraFall {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0deg) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(var(--drift, 30px)) translateY(100vh) rotate(var(--spin, 180deg)) scale(0.6);
+    opacity: 0;
+  }
 }
 
 @utility animate-fade-in {

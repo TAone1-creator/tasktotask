@@ -16,7 +16,8 @@ const WEEKDAY_SHORT = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 export default function HabitosPage() {
   const { user, supabase } = useAuth()
   const { theme } = useTheme()
-  const isDark = theme === 'dark'
+  const isDark = theme === 'dark' || theme === 'sakura-dark'
+  const isSakura = theme === 'sakura-light' || theme === 'sakura-dark'
   const [habits, setHabits] = useState<Habit[]>([])
   const [logs, setLogs] = useState<HabitLog[]>([])
   const [loading, setLoading] = useState(true)
@@ -208,15 +209,15 @@ export default function HabitosPage() {
                   <AreaChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                       <linearGradient id="progressGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor={isDark ? '#ffffff' : '#111827'} stopOpacity={0.25} />
-                        <stop offset="100%" stopColor={isDark ? '#ffffff' : '#111827'} stopOpacity={0} />
+                        <stop offset="0%" stopColor={isDark ? '#ffffff' : isSakura ? '#d14d72' : '#111827'} stopOpacity={0.25} />
+                        <stop offset="100%" stopColor={isDark ? '#ffffff' : isSakura ? '#d14d72' : '#111827'} stopOpacity={0} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#1e1e1e' : '#f3f4f6'} />
-                    <XAxis dataKey="day" tick={{ fontSize: 10, fill: isDark ? '#6e6e6e' : '#9ca3af' }} axisLine={false} tickLine={false} interval={Math.floor(daysInMonth.length / 10)} />
-                    <YAxis tick={{ fontSize: 10, fill: isDark ? '#6e6e6e' : '#9ca3af' }} axisLine={false} tickLine={false} domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
-                    <Tooltip formatter={(value) => [`${value}%`, 'Conclusão']} contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #282828' : '1px solid #e5e7eb', fontSize: '12px', backgroundColor: isDark ? '#111111' : '#ffffff', color: isDark ? '#ffffff' : '#111827' }} />
-                    <Area type="monotone" dataKey="rate" stroke={isDark ? '#ffffff' : '#111827'} strokeWidth={2} fill="url(#progressGrad)" dot={false} activeDot={{ r: 4 }} />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#1e1e1e' : isSakura ? '#ffe4ea' : '#f3f4f6'} />
+                    <XAxis dataKey="day" tick={{ fontSize: 10, fill: isDark ? '#6e6e6e' : isSakura ? '#a06b7c' : '#9ca3af' }} axisLine={false} tickLine={false} interval={Math.floor(daysInMonth.length / 10)} />
+                    <YAxis tick={{ fontSize: 10, fill: isDark ? '#6e6e6e' : isSakura ? '#a06b7c' : '#9ca3af' }} axisLine={false} tickLine={false} domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
+                    <Tooltip formatter={(value) => [`${value}%`, 'Conclusão']} contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #282828' : '1px solid #e5e7eb', fontSize: '12px', backgroundColor: isDark ? '#0a0a0a' : isSakura ? '#fff8f9' : '#ffffff', color: isDark ? '#ffffff' : isSakura ? '#2d1420' : '#111827' }} />
+                    <Area type="monotone" dataKey="rate" stroke={isDark ? '#ffffff' : isSakura ? '#d14d72' : '#111827'} strokeWidth={2} fill="url(#progressGrad)" dot={false} activeDot={{ r: 4 }} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -333,17 +334,17 @@ export default function HabitosPage() {
                             <AreaChart data={stats.chartData} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
                               <defs>
                                 <linearGradient id={`grad-${habit.id}`} x1="0" y1="0" x2="0" y2="1">
-                                  <stop offset="0%" stopColor={isDark ? '#ffffff' : '#22c55e'} stopOpacity={isDark ? 0.25 : 0.3} />
-                                  <stop offset="100%" stopColor={isDark ? '#ffffff' : '#22c55e'} stopOpacity={0.02} />
+                                  <stop offset="0%" stopColor={isDark ? '#ffffff' : isSakura ? '#d14d72' : '#22c55e'} stopOpacity={isDark ? 0.25 : 0.3} />
+                                  <stop offset="100%" stopColor={isDark ? '#ffffff' : isSakura ? '#d14d72' : '#22c55e'} stopOpacity={0.02} />
                                 </linearGradient>
                               </defs>
-                              <Area type="stepAfter" dataKey="done" stroke={isDark ? '#ffffff' : '#22c55e'} strokeWidth={1.5} fill={`url(#grad-${habit.id})`} dot={false} />
+                              <Area type="stepAfter" dataKey="done" stroke={isDark ? '#ffffff' : isSakura ? '#d14d72' : '#22c55e'} strokeWidth={1.5} fill={`url(#grad-${habit.id})`} dot={false} />
                               <XAxis dataKey="day" hide />
                               <YAxis domain={[0, 100]} hide />
                               <Tooltip
                                 formatter={(value) => [Number(value) > 0 ? 'Feito' : 'Nao feito', '']}
                                 labelFormatter={(label) => `Dia ${label}`}
-                                contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #282828' : '1px solid #e5e7eb', fontSize: '11px', padding: '4px 8px', backgroundColor: isDark ? '#111111' : '#ffffff', color: isDark ? '#ffffff' : '#111827' }}
+                                contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #282828' : '1px solid #e5e7eb', fontSize: '11px', padding: '4px 8px', backgroundColor: isDark ? '#0a0a0a' : isSakura ? '#fff8f9' : '#ffffff', color: isDark ? '#ffffff' : isSakura ? '#2d1420' : '#111827' }}
                               />
                             </AreaChart>
                           </ResponsiveContainer>

@@ -12,13 +12,15 @@ import type { Transaction, SavingsBox } from '@/types/database'
 
 const CHART_COLORS_LIGHT = ['#111827', '#374151', '#6B7280', '#9CA3AF', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
 const CHART_COLORS_DARK = ['#ffffff', '#c4c4c4', '#8a8a8a', '#6e6e6e', '#5a9ad5', '#3dbb63', '#d4b840', '#e05555', '#c0a0e0']
+const CHART_COLORS_SAKURA = ['#d14d72', '#e87a98', '#c43860', '#a82e50', '#6880d8', '#22c55e', '#eab308', '#f43f5e', '#7e22ce']
 const MONTH_NAMES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
 
 export default function FinancasPage() {
   const { user, supabase } = useAuth()
   const { theme } = useTheme()
-  const isDark = theme === 'dark'
-  const CHART_COLORS = isDark ? CHART_COLORS_DARK : CHART_COLORS_LIGHT
+  const isDark = theme === 'dark' || theme === 'sakura-dark'
+  const isSakura = theme === 'sakura-light' || theme === 'sakura-dark'
+  const CHART_COLORS = isDark ? CHART_COLORS_DARK : isSakura ? CHART_COLORS_SAKURA : CHART_COLORS_LIGHT
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [savingsBoxes, setSavingsBoxes] = useState<SavingsBox[]>([])
   const [loading, setLoading] = useState(true)

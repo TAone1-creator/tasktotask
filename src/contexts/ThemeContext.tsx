@@ -2,18 +2,25 @@
 
 import { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react'
 
-export type ThemeId = 'light' | 'dark'
+export type ThemeId = 'light' | 'dark' | 'sakura-light' | 'sakura-dark'
 
 export interface ThemePreset {
   id: ThemeId
   name: string
   description: string
+  icon: 'sun' | 'moon' | 'flower' | 'flower-dark'
 }
 
 export const THEME_PRESETS: ThemePreset[] = [
-  { id: 'light', name: 'Claro', description: 'Tema padrão claro' },
-  { id: 'dark', name: 'Escuro', description: 'Tema escuro' },
+  { id: 'light', name: 'Claro', description: 'Tema padrão', icon: 'sun' },
+  { id: 'dark', name: 'Escuro', description: 'Tema escuro', icon: 'moon' },
+  { id: 'sakura-light', name: 'Sakura', description: 'Cerejeira claro', icon: 'flower' },
+  { id: 'sakura-dark', name: 'Sakura Dark', description: 'Cerejeira escuro', icon: 'flower-dark' },
 ]
+
+export function isSakuraTheme(theme: ThemeId) {
+  return theme === 'sakura-light' || theme === 'sakura-dark'
+}
 
 interface ThemeContextType {
   theme: ThemeId

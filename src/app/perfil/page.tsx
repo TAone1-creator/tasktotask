@@ -5,9 +5,9 @@ import { useAuth } from '@/hooks/useAuth'
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Camera, User, Sun, Moon, Check } from 'lucide-react'
+import { Camera, User, Sun, Moon, Flower2, Check } from 'lucide-react'
 import { getLevelInfo } from '@/lib/gamification'
-import { useTheme, THEME_PRESETS, type ThemeId } from '@/contexts/ThemeContext'
+import { useTheme, THEME_PRESETS } from '@/contexts/ThemeContext'
 
 export default function PerfilPage() {
   const { user, profile, supabase, refreshProfile, avatarUrl } = useAuth()
@@ -184,7 +184,7 @@ export default function PerfilPage() {
           <div className="grid grid-cols-2 gap-3">
             {THEME_PRESETS.map((preset) => {
               const isActive = theme === preset.id
-              const Icon = preset.id === 'dark' ? Moon : Sun
+              const Icon = preset.icon === 'moon' ? Moon : preset.icon === 'sun' ? Sun : Flower2
               return (
                 <button
                   key={preset.id}
