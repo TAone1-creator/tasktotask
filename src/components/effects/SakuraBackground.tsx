@@ -21,7 +21,7 @@ function SakuraLightBg() {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           opacity: 0.7,
-          filter: 'blur(5px)',
+          filter: 'blur(3px)',
         }}
       />
 
