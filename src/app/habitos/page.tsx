@@ -4,9 +4,9 @@ import AppLayout from '@/components/layout/AppLayout'
 import { useAuth } from '@/hooks/useAuth'
 import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
-import { Plus, Repeat, Pause, Play, ChevronLeft, ChevronRight, Check } from 'lucide-react'
+import { Plus, Repeat, Pause, Play, ChevronLeft, ChevronRight, Check, Flame, TrendingUp } from 'lucide-react'
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, subDays, addMonths, subMonths } from 'date-fns'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import type { Habit, HabitLog } from '@/types/database'
 
 const MONTH_NAMES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
@@ -118,6 +118,46 @@ export default function HabitosPage() {
     return total > 0 ? Math.round((done / total) * 100) : 0
   }
 
+  // Per-habit stats for consistency cards
+  const habitStats = useMemo(() => {
+    const result: Record<string, {
+      monthDone: number
+      monthTotal: number
+      monthPercent: number
+      bestStreak: number
+      chartData: { day: string; done: number }[]
+    }> = {}
+    for (const habit of activeHabits) {
+      const monthDone = daysInMonth.filter(day => logSet.has(`${habit.id}:${format(day, 'yyyy-MM-dd')}`)).length
+      const monthTotal = daysInMonth.length
+
+      let best = 0, current = 0
+      for (let i = 365; i >= 0; i--) {
+        const date = subDays(new Date(), i).toISOString().split('T')[0]
+        if (logSet.has(`${habit.id}:${date}`)) {
+          current++
+          if (current > best) best = current
+        } else {
+          current = 0
+        }
+      }
+
+      const cData = daysInMonth.map(day => {
+        const dateStr = format(day, 'yyyy-MM-dd')
+        return { day: format(day, 'd'), done: logSet.has(`${habit.id}:${dateStr}`) ? 100 : 0 }
+      })
+
+      result[habit.id] = {
+        monthDone,
+        monthTotal,
+        monthPercent: monthTotal > 0 ? Math.round((monthDone / monthTotal) * 100) : 0,
+        bestStreak: best,
+        chartData: cData,
+      }
+    }
+    return result
+  }, [activeHabits, daysInMonth, logSet])
+
   return (
     <AppLayout>
       <div className="animate-fade-in">
@@ -216,18 +256,20 @@ export default function HabitosPage() {
                             week.map((day, di) => {
                               const dateStr = format(day, 'yyyy-MM-dd')
                               const isCompleted = logSet.has(`${habit.id}:${dateStr}`)
-                              const isToday = dateStr === today
-                              const isFuture = day > new Date()
+                              const isDayToday = dateStr === today
+                              const isFuture = dateStr > today
+                              const isPast = dateStr < today
                               return (
                                 <td key={`${wi}-${di}`} className={`px-0.5 py-2 text-center ${di === 0 && wi > 0 ? 'border-l border-gray-100' : ''}`}>
                                   <button
-                                    onClick={() => !isFuture && toggleHabitLog(habit.id, dateStr)}
-                                    disabled={isFuture}
+                                    onClick={() => isDayToday && toggleHabitLog(habit.id, dateStr)}
+                                    disabled={!isDayToday}
                                     className={`w-6 h-6 rounded-full mx-auto flex items-center justify-center transition-all text-[10px] ${
-                                      isCompleted ? 'bg-green-500 text-white'
-                                        : isToday ? 'border-2 border-gray-900 hover:bg-gray-100'
-                                        : isFuture ? 'bg-gray-50 text-gray-200'
-                                        : 'bg-gray-100 hover:bg-gray-200'
+                                      isCompleted && isDayToday ? 'bg-green-500 text-white hover:bg-green-600 cursor-pointer'
+                                        : isCompleted ? 'bg-green-500 text-white cursor-default'
+                                        : isDayToday ? 'border-2 border-gray-900 hover:bg-gray-100 cursor-pointer'
+                                        : isFuture ? 'bg-gray-50 text-gray-200 cursor-default'
+                                        : 'bg-gray-100 text-gray-300 cursor-default'
                                     }`}
                                   >
                                     {isCompleted && <Check size={12} />}
@@ -251,6 +293,84 @@ export default function HabitosPage() {
                 </table>
               </div>
             </div>
+
+            {/* Per-habit Consistency Cards */}
+            {activeHabits.length > 0 && (
+              <div>
+                <h2 className="text-sm font-semibold text-gray-900 mb-3">Constancia por Habito</h2>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {activeHabits.map((habit) => {
+                    const stats = habitStats[habit.id]
+                    const streak = streaks[habit.id] || 0
+                    if (!stats) return null
+                    return (
+                      <div key={habit.id} className="bg-white rounded-xl border border-gray-100 p-4">
+                        {/* Card Header */}
+                        <div className="flex items-center justify-between mb-3">
+                          <Link href={`/habitos/${habit.id}`} className="text-sm font-semibold text-gray-900 hover:text-gray-700 truncate">
+                            {habit.name}
+                          </Link>
+                          {streak > 0 && (
+                            <div className="flex items-center gap-1 bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full shrink-0 ml-2">
+                              <Flame size={12} />
+                              <span className="text-[11px] font-semibold">{streak}d</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Mini Area Chart */}
+                        <div className="mb-3">
+                          <ResponsiveContainer width="100%" height={70}>
+                            <AreaChart data={stats.chartData} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
+                              <defs>
+                                <linearGradient id={`grad-${habit.id}`} x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="0%" stopColor="#22c55e" stopOpacity={0.3} />
+                                  <stop offset="100%" stopColor="#22c55e" stopOpacity={0.02} />
+                                </linearGradient>
+                              </defs>
+                              <Area type="stepAfter" dataKey="done" stroke="#22c55e" strokeWidth={1.5} fill={`url(#grad-${habit.id})`} dot={false} />
+                              <XAxis dataKey="day" hide />
+                              <YAxis domain={[0, 100]} hide />
+                              <Tooltip
+                                formatter={(value) => [Number(value) > 0 ? 'Feito' : 'Nao feito', '']}
+                                labelFormatter={(label) => `Dia ${label}`}
+                                contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb', fontSize: '11px', padding: '4px 8px' }}
+                              />
+                            </AreaChart>
+                          </ResponsiveContainer>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="flex-1 bg-gray-100 rounded-full h-2">
+                            <div
+                              className={`h-2 rounded-full transition-all ${
+                                stats.monthPercent >= 80 ? 'bg-green-500' :
+                                stats.monthPercent >= 50 ? 'bg-yellow-500' : 'bg-red-400'
+                              }`}
+                              style={{ width: `${stats.monthPercent}%` }}
+                            />
+                          </div>
+                          <span className="text-xs font-bold text-gray-700 w-10 text-right">{stats.monthPercent}%</span>
+                        </div>
+
+                        {/* Stats Row */}
+                        <div className="flex items-center justify-between text-[11px] text-gray-500">
+                          <div className="flex items-center gap-1">
+                            <Check size={10} className="text-green-500" />
+                            <span>{stats.monthDone} de {stats.monthTotal} dias</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <TrendingUp size={10} className="text-blue-500" />
+                            <span>Recorde: {stats.bestStreak}d</span>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Paused habits */}
             {pausedHabits.length > 0 && (
