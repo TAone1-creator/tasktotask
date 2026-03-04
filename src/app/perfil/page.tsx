@@ -2,20 +2,21 @@
 
 import AppLayout from '@/components/layout/AppLayout'
 import { useAuth } from '@/hooks/useAuth'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { differenceInDays, format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 import Link from 'next/link'
-import { LIFE_CONTEXTS } from '@/lib/constants'
+import { Camera, User } from 'lucide-react'
 import { getLevelInfo } from '@/lib/gamification'
 
 export default function PerfilPage() {
-  const { user, profile, supabase } = useAuth()
+  const { user, profile, supabase, refreshProfile } = useAuth()
   const router = useRouter()
   const [fullName, setFullName] = useState(profile?.full_name || '')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleSave = async () => {
     if (!user) return
@@ -23,30 +24,49 @@ export default function PerfilPage() {
     await supabase.from('profiles').update({ full_name: fullName }).eq('id', user.id)
     setSaving(false)
     setSaved(true)
+    refreshProfile()
     setTimeout(() => setSaved(false), 2000)
   }
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || !user) return
+
+    setUploading(true)
+    try {
+      const fileExt = file.name.split('.').pop()
+      const filePath = `${user.id}/avatar.${fileExt}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file, { upsert: true })
+
+      if (uploadError) {
+        console.error('Upload error:', uploadError)
+        setUploading(false)
+        return
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath)
+
+      const url = `${publicUrl}?t=${Date.now()}`
+      await supabase.from('profiles').update({ avatar_url: url }).eq('id', user.id)
+      setAvatarUrl(url)
+      refreshProfile()
+    } catch (err) {
+      console.error('Avatar upload failed:', err)
+    }
+    setUploading(false)
+  }
+
   const handleDeleteAccount = async () => {
-    if (!confirm('Tem certeza? Todos os seus dados serão excluídos permanentemente.')) return
+    if (!confirm('Tem certeza? Todos os seus dados serao excluidos permanentemente.')) return
     await supabase.auth.signOut()
     router.push('/')
   }
 
-  const daysRemaining = profile?.cycle_end_date
-    ? differenceInDays(new Date(profile.cycle_end_date), new Date())
-    : null
-
-  const daysElapsed = profile?.cycle_start_date
-    ? differenceInDays(new Date(), new Date(profile.cycle_start_date))
-    : 0
-
-  const totalDays = profile?.cycle_start_date && profile?.cycle_end_date
-    ? differenceInDays(new Date(profile.cycle_end_date), new Date(profile.cycle_start_date))
-    : 1
-
-  const cycleProgress = Math.min((daysElapsed / totalDays) * 100, 100)
-
-  const contextLabel = LIFE_CONTEXTS.find(c => c.id === profile?.context)?.label || profile?.context || 'Não definido'
   const levelInfo = getLevelInfo(profile?.xp ?? 0)
 
   return (
@@ -54,62 +74,34 @@ export default function PerfilPage() {
       <div className="max-w-xl mx-auto animate-fade-in">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">Perfil</h1>
 
-        {/* Cycle Info */}
-        <div className="bg-white rounded-xl border border-gray-100 p-5 mb-6">
-          <h2 className="text-sm font-semibold text-gray-900 mb-3">Seu Ciclo</h2>
-          <div className="space-y-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Contexto</span>
-              <span className="text-gray-900 font-medium">{contextLabel}</span>
+        {/* Avatar Upload */}
+        <div className="flex flex-col items-center mb-6">
+          <div className="relative group">
+            <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200 flex items-center justify-center">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <User size={36} className="text-gray-300" />
+              )}
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Duração</span>
-              <span className="text-gray-900 font-medium">{profile?.cycle_months || 3} meses</span>
-            </div>
-            {profile?.cycle_start_date && (
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Início</span>
-                <span className="text-gray-900 font-medium">
-                  {format(new Date(profile.cycle_start_date), "d 'de' MMMM 'de' yyyy", { locale: ptBR })}
-                </span>
-              </div>
-            )}
-            {profile?.cycle_end_date && (
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Término</span>
-                <span className="text-gray-900 font-medium">
-                  {format(new Date(profile.cycle_end_date), "d 'de' MMMM 'de' yyyy", { locale: ptBR })}
-                </span>
-              </div>
-            )}
-            {daysRemaining !== null && (
-              <>
-                <div className="w-full bg-gray-100 rounded-full h-2">
-                  <div className="bg-gray-900 h-2 rounded-full transition-all" style={{ width: `${cycleProgress}%` }} />
-                </div>
-                <p className="text-xs text-gray-400 text-center">
-                  {daysRemaining > 0 ? `${daysRemaining} dias restantes` : 'Ciclo encerrado'}
-                </p>
-              </>
-            )}
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/40 flex items-center justify-center transition-all cursor-pointer"
+            >
+              <Camera size={20} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarUpload}
+              className="hidden"
+            />
           </div>
-
-          {daysRemaining !== null && daysRemaining <= 30 && daysRemaining > 0 && (
-            <Link href="/encerramento" className="mt-4 block w-full py-2.5 text-center bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800">
-              Ver relatório de encerramento
-            </Link>
-          )}
-        </div>
-
-        {/* Level */}
-        <div className="bg-white rounded-xl border border-gray-100 p-5 mb-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-sm font-semibold text-gray-900">Nível {levelInfo.currentLevel.level} — {levelInfo.currentLevel.name}</p>
-              <p className="text-xs text-gray-500">{profile?.xp ?? 0} XP total</p>
-            </div>
-            <Link href="/gamificacao" className="text-xs text-gray-900 font-medium hover:underline">Ver detalhes</Link>
-          </div>
+          {uploading && <p className="text-xs text-gray-400 mt-2">Enviando...</p>}
+          <p className="text-sm font-semibold text-gray-900 mt-3">{profile?.full_name || 'Usuario'}</p>
+          <p className="text-xs text-gray-500">{profile?.email}</p>
         </div>
 
         {/* Edit Profile */}
@@ -139,10 +131,21 @@ export default function PerfilPage() {
           </div>
         </div>
 
+        {/* Level */}
+        <div className="bg-white rounded-xl border border-gray-100 p-5 mb-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-sm font-semibold text-gray-900">Nível {levelInfo.currentLevel.level} — {levelInfo.currentLevel.name}</p>
+              <p className="text-xs text-gray-500">{profile?.xp ?? 0} XP total</p>
+            </div>
+            <Link href="/gamificacao" className="text-xs text-gray-900 font-medium hover:underline">Ver detalhes</Link>
+          </div>
+        </div>
+
         {/* Danger Zone */}
         <div className="bg-white rounded-xl border border-red-100 p-5">
           <h2 className="text-sm font-semibold text-red-600 mb-2">Zona de Perigo</h2>
-          <p className="text-xs text-gray-500 mb-3">Ações irreversíveis</p>
+          <p className="text-xs text-gray-500 mb-3">Acoes irreversiveis</p>
           <button
             onClick={handleDeleteAccount}
             className="px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100"

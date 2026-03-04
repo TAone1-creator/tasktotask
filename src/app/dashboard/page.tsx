@@ -3,11 +3,9 @@
 import AppLayout from '@/components/layout/AppLayout'
 import { useAuth } from '@/hooks/useAuth'
 import { useEffect, useState } from 'react'
-import { Target, Wallet, Repeat, CheckSquare, TrendingUp, Calendar } from 'lucide-react'
+import { Target, Wallet, Repeat, CheckSquare } from 'lucide-react'
 import Link from 'next/link'
-import { getLevelInfo } from '@/lib/gamification'
-import { format, differenceInDays } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { format } from 'date-fns'
 import type { Goal, Habit, Task, Transaction } from '@/types/database'
 
 export default function DashboardPage() {
@@ -50,61 +48,12 @@ export default function DashboardPage() {
     fetchData()
   }, [user?.id, supabase])
 
-  const levelInfo = getLevelInfo(profile?.xp ?? 0)
-  const daysRemaining = profile?.cycle_end_date
-    ? differenceInDays(new Date(profile.cycle_end_date), new Date())
-    : null
-
   const habitsCompleted = todayHabitLogs.length
   const habitsTotal = habits.length
 
   return (
     <AppLayout>
       <div className="animate-fade-in">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Olá, {profile?.full_name?.split(' ')[0] || 'você'}
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              {format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}
-            </p>
-          </div>
-          {daysRemaining !== null && daysRemaining > 0 && (
-            <div className="text-right">
-              <p className="text-sm font-medium text-gray-900">{daysRemaining} dias restantes</p>
-              <p className="text-xs text-gray-500">no seu ciclo</p>
-            </div>
-          )}
-        </div>
-
-        {/* Level Progress */}
-        <div className="bg-white rounded-xl border border-gray-100 p-5 mb-6">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center">
-                <TrendingUp className="text-white" size={18} />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-900">Nível {levelInfo.currentLevel.level} — {levelInfo.currentLevel.name}</p>
-                <p className="text-xs text-gray-500">{levelInfo.currentLevel.description}</p>
-              </div>
-            </div>
-            <span className="text-sm text-gray-500">{profile?.xp ?? 0} XP</span>
-          </div>
-          <div className="w-full bg-gray-100 rounded-full h-2 mt-3">
-            <div
-              className="bg-gray-900 h-2 rounded-full transition-all duration-700"
-              style={{ width: `${levelInfo.progressPercent}%` }}
-            />
-          </div>
-          {levelInfo.nextLevel && (
-            <p className="text-xs text-gray-400 mt-1.5 text-right">
-              {levelInfo.xpForNextLevel - levelInfo.xpInCurrentLevel} XP para Nível {levelInfo.nextLevel.level}
-            </p>
-          )}
-        </div>
-
         {/* Quick Stats Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <Link href="/metas" className="bg-white rounded-xl border border-gray-100 p-4 hover:border-gray-200 transition-colors">

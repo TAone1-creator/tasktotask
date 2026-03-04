@@ -14,6 +14,7 @@ export interface Database {
           id: string
           email: string
           full_name: string | null
+          avatar_url: string | null
           context: string | null
           cycle_months: number
           cycle_start_date: string | null
@@ -28,6 +29,7 @@ export interface Database {
           id: string
           email: string
           full_name?: string | null
+          avatar_url?: string | null
           context?: string | null
           cycle_months?: number
           cycle_start_date?: string | null
@@ -42,6 +44,7 @@ export interface Database {
           id?: string
           email?: string
           full_name?: string | null
+          avatar_url?: string | null
           context?: string | null
           cycle_months?: number
           cycle_start_date?: string | null
