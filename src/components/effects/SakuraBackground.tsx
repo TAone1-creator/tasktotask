@@ -17,7 +17,7 @@ function SakuraLightBg() {
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: 'url(/sakura-claro.png)',
+          backgroundImage: 'url(https://doepwastkhrnextkgjdj.supabase.co/storage/v1/object/public/assets/1490470c-db42-417a-ab3a-18aa061cd9fa/sakura-claro.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           opacity: 0.7,
