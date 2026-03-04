@@ -5,11 +5,13 @@ import { useAuth } from '@/hooks/useAuth'
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Camera, User } from 'lucide-react'
+import { Camera, User, Sun, Moon, Check } from 'lucide-react'
 import { getLevelInfo } from '@/lib/gamification'
+import { useTheme, THEME_PRESETS, type ThemeId } from '@/contexts/ThemeContext'
 
 export default function PerfilPage() {
   const { user, profile, supabase, refreshProfile, avatarUrl } = useAuth()
+  const { theme, setTheme } = useTheme()
   const router = useRouter()
   const [fullName, setFullName] = useState(profile?.full_name || '')
   const [saving, setSaving] = useState(false)
@@ -173,6 +175,37 @@ export default function PerfilPage() {
               <p className="text-xs text-gray-500">{profile?.xp ?? 0} XP total</p>
             </div>
             <Link href="/gamificacao" className="text-xs text-gray-900 font-medium hover:underline">Ver detalhes</Link>
+          </div>
+        </div>
+
+        {/* Theme */}
+        <div className="bg-white rounded-xl border border-gray-100 p-5 mb-6">
+          <h2 className="text-sm font-semibold text-gray-900 mb-3">Aparência</h2>
+          <div className="grid grid-cols-2 gap-3">
+            {THEME_PRESETS.map((preset) => {
+              const isActive = theme === preset.id
+              const Icon = preset.id === 'dark' ? Moon : Sun
+              return (
+                <button
+                  key={preset.id}
+                  onClick={() => setTheme(preset.id)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg border-2 transition-all text-left ${
+                    isActive
+                      ? 'border-gray-900 bg-gray-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <Icon size={18} className={isActive ? 'text-gray-900' : 'text-gray-400'} />
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-medium ${isActive ? 'text-gray-900' : 'text-gray-600'}`}>
+                      {preset.name}
+                    </p>
+                    <p className="text-xs text-gray-400">{preset.description}</p>
+                  </div>
+                  {isActive && <Check size={16} className="text-gray-900 shrink-0" />}
+                </button>
+              )
+            })}
           </div>
         </div>
 

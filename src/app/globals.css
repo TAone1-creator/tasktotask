@@ -21,6 +21,80 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: var(--color-text-primary);
   background-color: var(--color-surface-secondary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ═══════════════════════════════════════════════════
+   DARK THEME — Override Tailwind v4 color variables
+   Tailwind v4 outputs all colors as CSS custom properties,
+   so redefining them here applies to all existing utilities
+   (bg-white, text-gray-900, border-gray-200, etc.)
+   without touching any component file.
+   ═══════════════════════════════════════════════════ */
+[data-theme="dark"] {
+  /* Gray scale — fully inverted for dark mode */
+  --color-white: #0e0e16;
+  --color-gray-50: #121220;
+  --color-gray-100: #1a1a2c;
+  --color-gray-200: #26263c;
+  --color-gray-300: #38384e;
+  --color-gray-400: #7a7a94;
+  --color-gray-500: #9494ac;
+  --color-gray-600: #acacc0;
+  --color-gray-700: #c8c8d8;
+  --color-gray-800: #dcdce8;
+  --color-gray-900: #eeeeF6;
+  --color-gray-950: #f8f8fc;
+  --color-black: #ffffff;
+
+  /* Semantic theme tokens */
+  --color-surface: #0e0e16;
+  --color-surface-secondary: #0a0a12;
+  --color-surface-tertiary: #1a1a2c;
+  --color-border: #26263c;
+  --color-text-primary: #eeeef6;
+  --color-text-secondary: #9494ac;
+  --color-text-tertiary: #7a7a94;
+
+  /* Accent colors — slightly adjusted for dark backgrounds */
+  --color-green-50: #0d2818;
+  --color-green-100: #133d24;
+  --color-green-500: #22c993;
+  --color-green-600: #34d399;
+  --color-green-700: #a7f3d0;
+
+  --color-red-50: #2a1215;
+  --color-red-100: #3d1519;
+  --color-red-400: #f87171;
+  --color-red-500: #ef4444;
+  --color-red-600: #fca5a5;
+  --color-red-700: #fecaca;
+
+  --color-blue-50: #0f1a30;
+  --color-blue-100: #162844;
+  --color-blue-500: #60a5fa;
+  --color-blue-600: #93bbfd;
+  --color-blue-700: #bfdbfe;
+
+  --color-yellow-50: #2a2008;
+  --color-yellow-100: #3d3010;
+  --color-yellow-400: #facc15;
+  --color-yellow-500: #eab308;
+  --color-yellow-700: #fef08a;
+
+  --color-orange-50: #2a1a08;
+  --color-orange-100: #3d2810;
+  --color-orange-600: #fdba74;
+  --color-orange-700: #fed7aa;
+
+  --color-purple-100: #2d1854;
+  --color-purple-700: #d8b4fe;
+
+  /* Primary button override (keep readable in dark mode) */
+  --color-primary: #eeeef6;
+  --color-primary-light: #26263c;
+
+  color-scheme: dark;
 }
 
 @utility animate-fade-in {
