@@ -6,7 +6,6 @@ import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Plus, Repeat, Pause, Play, ChevronLeft, ChevronRight, Check } from 'lucide-react'
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, subDays, addMonths, subMonths } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import type { Habit, HabitLog } from '@/types/database'
 
@@ -158,28 +157,6 @@ export default function HabitosPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            {/* Today's Quick Check */}
-            <div className="bg-white rounded-xl border border-gray-100 p-5">
-              <h2 className="text-sm font-semibold text-gray-900 mb-4">Hoje &mdash; {format(new Date(), "d 'de' MMMM", { locale: ptBR })}</h2>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                {activeHabits.map((habit) => {
-                  const isChecked = logSet.has(`${habit.id}:${today}`)
-                  const streak = streaks[habit.id] || 0
-                  return (
-                    <div key={habit.id} className="flex items-center justify-between p-3 rounded-lg border border-gray-100">
-                      <div className="flex items-center gap-3">
-                        <button onClick={() => toggleHabitLog(habit.id, today)} className={`w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all ${isChecked ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300 hover:border-gray-400'}`}>
-                          {isChecked && <Check size={14} />}
-                        </button>
-                        <span className={`text-sm font-medium ${isChecked ? 'text-gray-400 line-through' : 'text-gray-700'}`}>{habit.name}</span>
-                      </div>
-                      {streak > 0 && <span className="text-xs text-orange-500 font-medium">{streak}d</span>}
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-
             {/* Progress Chart */}
             {activeHabits.length > 0 && chartData.length > 0 && (
               <div className="bg-white rounded-xl border border-gray-100 p-5">
