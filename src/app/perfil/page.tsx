@@ -71,8 +71,8 @@ export default function PerfilPage() {
         .eq('id', user.id)
 
       if (updateError) {
-        console.error('Profile update error:', updateError)
-        setUploadError('Erro ao salvar URL do avatar no perfil. Verifique se a coluna "avatar_url" existe na tabela profiles.')
+        console.error('Profile update error:', updateError.message, updateError.details, updateError.hint)
+        setUploadError(`Erro ao salvar avatar: ${updateError.message || 'erro desconhecido'}`)
         setAvatarPreview(null)
         setUploading(false)
         return
