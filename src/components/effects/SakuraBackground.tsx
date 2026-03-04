@@ -32,7 +32,7 @@ export default function SakuraBackground() {
         }}
       />
 
-      {/* Far mountains */}
+      {/* Mountains — Fuji-style pointed peaks */}
       <svg
         className="absolute bottom-0 w-full"
         style={{ height: '45%' }}
@@ -40,18 +40,27 @@ export default function SakuraBackground() {
         preserveAspectRatio="none"
         fill="none"
       >
+        {/* Far layer — tallest peaks */}
         <path
-          d="M0 400 L0 280 Q120 180 240 240 Q400 140 520 200 Q650 100 780 180 Q900 80 1020 160 Q1150 60 1260 140 Q1360 100 1440 160 L1440 400Z"
+          d="M0 400 L0 320 L80 280 L180 120 L220 100 L260 120 L360 260 L440 300 L520 240 L620 80 L660 55 L700 80 L800 220 L880 280 L960 200 L1060 60 L1100 40 L1140 60 L1240 200 L1320 280 L1380 240 L1440 260 L1440 400Z"
           fill="#f8c8d4"
           opacity="0.3"
         />
+        {/* Snow caps on far peaks */}
+        <path d="M180 120 L220 100 L260 120 L240 115 L220 108 L200 115Z" fill="#ffffff" opacity="0.25" />
+        <path d="M620 80 L660 55 L700 80 L685 75 L660 63 L635 75Z" fill="#ffffff" opacity="0.25" />
+        <path d="M1060 60 L1100 40 L1140 60 L1125 55 L1100 48 L1075 55Z" fill="#ffffff" opacity="0.25" />
+
+        {/* Mid layer */}
         <path
-          d="M0 400 L0 310 Q100 230 220 280 Q360 190 480 250 Q580 170 720 230 Q860 140 980 210 Q1100 130 1220 200 Q1340 160 1440 200 L1440 400Z"
+          d="M0 400 L0 340 L100 300 L200 180 L240 155 L280 180 L380 280 L460 310 L540 260 L640 140 L680 115 L720 140 L820 260 L900 310 L1000 240 L1100 130 L1140 105 L1180 130 L1280 250 L1360 310 L1440 290 L1440 400Z"
           fill="#f0b0c0"
           opacity="0.25"
         />
+
+        {/* Near layer — smaller foothills */}
         <path
-          d="M0 400 L0 340 Q80 280 200 320 Q340 250 460 300 Q560 240 700 280 Q840 210 960 270 Q1080 220 1200 260 Q1320 230 1440 260 L1440 400Z"
+          d="M0 400 L0 360 L120 330 L220 260 L260 240 L300 260 L400 320 L500 350 L580 310 L680 230 L720 210 L760 230 L860 310 L940 350 L1040 300 L1140 220 L1180 200 L1220 220 L1320 300 L1400 350 L1440 340 L1440 400Z"
           fill="#e8a0b4"
           opacity="0.2"
         />
