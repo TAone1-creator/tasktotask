@@ -52,17 +52,23 @@ export default function Header({ profile }: { profile: Profile | null }) {
         </Link>
 
         {/* Right: Profile + Logout */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <Link
             href="/perfil"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors"
+            className="flex items-center gap-2 px-2 py-1 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors"
           >
-            <User size={16} />
+            <div className="w-7 h-7 rounded-full overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center shrink-0">
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <User size={14} className="text-gray-400" />
+              )}
+            </div>
             <span className="hidden sm:inline text-xs font-medium">Perfil</span>
           </Link>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
             title="Sair"
           >
             <LogOut size={16} />
