@@ -13,11 +13,23 @@ export default function SakuraBackground() {
 function SakuraLightBg() {
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-      {/* Sky gradient */}
+      {/* Background image — sakura claro */}
       <div
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(180deg, #fff7f8 0%, #ffe8ee 40%, #ffd4de 70%, #ffc4d2 100%)',
+          backgroundImage: 'url(/sakura-claro.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: 0.7,
+          filter: 'blur(5px)',
+        }}
+      />
+
+      {/* Sky gradient overlay */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(180deg, rgba(255,247,248,0.85) 0%, rgba(255,232,238,0.7) 40%, rgba(255,212,222,0.6) 70%, rgba(255,196,210,0.7) 100%)',
         }}
       />
 

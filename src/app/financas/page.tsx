@@ -12,15 +12,18 @@ import type { Transaction, SavingsBox } from '@/types/database'
 
 const CHART_COLORS_LIGHT = ['#111827', '#374151', '#6B7280', '#9CA3AF', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
 const CHART_COLORS_DARK = ['#ffffff', '#c4c4c4', '#8a8a8a', '#6e6e6e', '#5a9ad5', '#3dbb63', '#d4b840', '#e05555', '#c0a0e0']
-const CHART_COLORS_SAKURA = ['#d14d72', '#e87a98', '#c43860', '#a82e50', '#6880d8', '#22c55e', '#eab308', '#f43f5e', '#7e22ce']
+const CHART_COLORS_SAKURA = ['#d14d72', '#e87a98', '#c43860', '#a82e50', '#d86888', '#e8638a', '#e88098', '#f06888', '#b83870']
+const CHART_COLORS_SAKURA_DARK = ['#e8899e', '#d8728a', '#c8607a', '#b85068', '#c8889a', '#d8a0ae', '#d8a8a0', '#e87080', '#c8a0b8']
 const MONTH_NAMES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
 
 export default function FinancasPage() {
   const { user, supabase } = useAuth()
   const { theme } = useTheme()
   const isDark = theme === 'dark' || theme === 'sakura-dark'
+  const isSakuraDark = theme === 'sakura-dark'
+  const isPureDark = theme === 'dark'
   const isSakura = theme === 'sakura-light' || theme === 'sakura-dark'
-  const CHART_COLORS = isDark ? CHART_COLORS_DARK : isSakura ? CHART_COLORS_SAKURA : CHART_COLORS_LIGHT
+  const CHART_COLORS = isSakuraDark ? CHART_COLORS_SAKURA_DARK : isPureDark ? CHART_COLORS_DARK : isSakura ? CHART_COLORS_SAKURA : CHART_COLORS_LIGHT
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [savingsBoxes, setSavingsBoxes] = useState<SavingsBox[]>([])
   const [loading, setLoading] = useState(true)
@@ -179,7 +182,7 @@ export default function FinancasPage() {
                       <Pie data={pieData} cx="50%" cy="50%" innerRadius={55} outerRadius={85} paddingAngle={3} dataKey="value">
                         {pieData.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
                       </Pie>
-                      <Tooltip formatter={(value) => [`R$ ${Number(value).toFixed(2)}`, '']} contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #282828' : '1px solid #e5e7eb', fontSize: '12px', backgroundColor: isDark ? '#111111' : '#ffffff', color: isDark ? '#ffffff' : '#111827' }} />
+                      <Tooltip formatter={(value) => [`R$ ${Number(value).toFixed(2)}`, '']} contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #221e1f' : '1px solid #e5e7eb', fontSize: '12px', backgroundColor: isSakuraDark ? '#0c0a0b' : isPureDark ? '#0a0a0a' : isSakura ? '#fff8f9' : '#ffffff', color: isDark ? '#f5f0f1' : isSakura ? '#3a1428' : '#111827' }} />
                     </PieChart>
                   </ResponsiveContainer>
                   <div className="flex flex-wrap gap-3 mt-2 justify-center">
@@ -202,12 +205,12 @@ export default function FinancasPage() {
               ) : (
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={barData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#1e1e1e' : '#f3f4f6'} />
-                    <XAxis dataKey="day" tick={{ fontSize: 10, fill: isDark ? '#6e6e6e' : '#9ca3af' }} axisLine={false} tickLine={false} interval={Math.floor(barData.length / 8)} />
-                    <YAxis tick={{ fontSize: 10, fill: isDark ? '#6e6e6e' : '#9ca3af' }} axisLine={false} tickLine={false} />
-                    <Tooltip formatter={(value, name) => [`R$ ${Number(value).toFixed(2)}`, name]} contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #282828' : '1px solid #e5e7eb', fontSize: '12px', backgroundColor: isDark ? '#111111' : '#ffffff', color: isDark ? '#ffffff' : '#111827' }} />
-                    <Bar dataKey="Gastos" fill={isDark ? '#e05555' : '#EF4444'} radius={[3, 3, 0, 0]} />
-                    <Bar dataKey="Ganhos" fill={isDark ? '#3dbb63' : '#10B981'} radius={[3, 3, 0, 0]} />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isSakuraDark ? '#221e1f' : isPureDark ? '#1e1e1e' : isSakura ? '#fcd9e0' : '#f3f4f6'} />
+                    <XAxis dataKey="day" tick={{ fontSize: 10, fill: isSakuraDark ? '#706568' : isPureDark ? '#6e6e6e' : isSakura ? '#b06878' : '#9ca3af' }} axisLine={false} tickLine={false} interval={Math.floor(barData.length / 8)} />
+                    <YAxis tick={{ fontSize: 10, fill: isSakuraDark ? '#706568' : isPureDark ? '#6e6e6e' : isSakura ? '#b06878' : '#9ca3af' }} axisLine={false} tickLine={false} />
+                    <Tooltip formatter={(value, name) => [`R$ ${Number(value).toFixed(2)}`, name]} contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #221e1f' : '1px solid #e5e7eb', fontSize: '12px', backgroundColor: isSakuraDark ? '#0c0a0b' : isPureDark ? '#0a0a0a' : isSakura ? '#fff8f9' : '#ffffff', color: isDark ? '#f5f0f1' : isSakura ? '#3a1428' : '#111827' }} />
+                    <Bar dataKey="Gastos" fill={isSakuraDark ? '#e87080' : isPureDark ? '#e05555' : isSakura ? '#e04870' : '#EF4444'} radius={[3, 3, 0, 0]} />
+                    <Bar dataKey="Ganhos" fill={isSakuraDark ? '#e8899e' : isPureDark ? '#3dbb63' : isSakura ? '#e8638a' : '#10B981'} radius={[3, 3, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               )}
