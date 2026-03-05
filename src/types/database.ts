@@ -327,6 +327,41 @@ export interface Database {
           earned_at?: string
         }
       }
+      diet_meals: {
+        Row: {
+          id: string
+          user_id: string
+          meal_type: 'breakfast' | 'morning_snack' | 'lunch' | 'afternoon_snack' | 'dinner' | 'supper'
+          day_of_week: number
+          name: string
+          description: string | null
+          calories: number | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          meal_type: 'breakfast' | 'morning_snack' | 'lunch' | 'afternoon_snack' | 'dinner' | 'supper'
+          day_of_week: number
+          name: string
+          description?: string | null
+          calories?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          meal_type?: 'breakfast' | 'morning_snack' | 'lunch' | 'afternoon_snack' | 'dinner' | 'supper'
+          day_of_week?: number
+          name?: string
+          description?: string | null
+          calories?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
@@ -349,3 +384,4 @@ export type HabitLog = Database['public']['Tables']['habit_logs']['Row']
 export type Task = Database['public']['Tables']['tasks']['Row']
 export type TaskChecklistItem = Database['public']['Tables']['task_checklist_items']['Row']
 export type Badge = Database['public']['Tables']['badges']['Row']
+export type DietMeal = Database['public']['Tables']['diet_meals']['Row']
