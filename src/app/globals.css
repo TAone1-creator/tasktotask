@@ -17,6 +17,52 @@
   --color-text-tertiary: #9ca3af;
 }
 
+/* ═══════════════════════════════════════════════════
+   LIGHT THEME — Pure black & white, zero color
+   ═══════════════════════════════════════════════════ */
+[data-theme="light"] {
+  /* All accent colors → grayscale */
+  --color-green-50: #f9fafb;
+  --color-green-100: #f3f4f6;
+  --color-green-500: #111827;
+  --color-green-600: #111827;
+  --color-green-700: #374151;
+
+  --color-red-50: #f9fafb;
+  --color-red-100: #f3f4f6;
+  --color-red-400: #4b5563;
+  --color-red-500: #374151;
+  --color-red-600: #1f2937;
+  --color-red-700: #111827;
+
+  --color-blue-50: #f9fafb;
+  --color-blue-100: #f3f4f6;
+  --color-blue-500: #111827;
+  --color-blue-600: #1f2937;
+  --color-blue-700: #374151;
+
+  --color-yellow-50: #f9fafb;
+  --color-yellow-100: #f3f4f6;
+  --color-yellow-400: #6b7280;
+  --color-yellow-500: #4b5563;
+  --color-yellow-700: #374151;
+
+  --color-orange-50: #f9fafb;
+  --color-orange-100: #f3f4f6;
+  --color-orange-600: #374151;
+  --color-orange-700: #111827;
+
+  --color-purple-100: #f3f4f6;
+  --color-purple-700: #374151;
+
+  --color-indigo-50: #f3f4f6;
+  --color-indigo-500: #111827;
+  --color-indigo-600: #111827;
+
+  --color-primary: #111827;
+  --color-primary-light: #f3f4f6;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: var(--color-text-primary);
@@ -56,39 +102,43 @@ body {
   --color-text-secondary: #8a8a8a;
   --color-text-tertiary: #6e6e6e;
 
-  /* Accent colors — same hues, adjusted for black bg */
-  --color-green-50: #0a1f0a;
-  --color-green-100: #102e10;
-  --color-green-500: #3dbb63;
-  --color-green-600: #4ece76;
-  --color-green-700: #86e09e;
+  /* All accent colors → grayscale (pure B&W) */
+  --color-green-50: #0a0a0a;
+  --color-green-100: #141414;
+  --color-green-500: #ffffff;
+  --color-green-600: #e0e0e0;
+  --color-green-700: #c4c4c4;
 
-  --color-red-50: #1f0a0a;
-  --color-red-100: #2e1010;
-  --color-red-400: #e05555;
-  --color-red-500: #d43d3d;
-  --color-red-600: #e87777;
-  --color-red-700: #f0a8a8;
+  --color-red-50: #0a0a0a;
+  --color-red-100: #141414;
+  --color-red-400: #a3a3a3;
+  --color-red-500: #8a8a8a;
+  --color-red-600: #c4c4c4;
+  --color-red-700: #e0e0e0;
 
-  --color-blue-50: #0a1420;
-  --color-blue-100: #101e30;
-  --color-blue-500: #5a9ad5;
-  --color-blue-600: #7ab4e8;
-  --color-blue-700: #a8d0f0;
+  --color-blue-50: #0a0a0a;
+  --color-blue-100: #141414;
+  --color-blue-500: #ffffff;
+  --color-blue-600: #e0e0e0;
+  --color-blue-700: #c4c4c4;
 
-  --color-yellow-50: #1f1a0a;
-  --color-yellow-100: #2e2610;
-  --color-yellow-400: #d4b840;
-  --color-yellow-500: #c0a020;
-  --color-yellow-700: #e0d070;
+  --color-yellow-50: #0a0a0a;
+  --color-yellow-100: #141414;
+  --color-yellow-400: #8a8a8a;
+  --color-yellow-500: #6e6e6e;
+  --color-yellow-700: #a3a3a3;
 
-  --color-orange-50: #1f160a;
-  --color-orange-100: #2e2010;
-  --color-orange-600: #d89860;
-  --color-orange-700: #e0b888;
+  --color-orange-50: #0a0a0a;
+  --color-orange-100: #141414;
+  --color-orange-600: #a3a3a3;
+  --color-orange-700: #c4c4c4;
 
-  --color-purple-100: #201030;
-  --color-purple-700: #c0a0e0;
+  --color-purple-100: #141414;
+  --color-purple-700: #c4c4c4;
+
+  --color-indigo-50: #141414;
+  --color-indigo-500: #ffffff;
+  --color-indigo-600: #e0e0e0;
 
   /* Primary */
   --color-primary: #ffffff;
@@ -304,67 +354,7 @@ body {
   --color-indigo-500: #4BA8DB;
   --color-indigo-600: #6abce8;
 
-  /* Rainbow gradient variable */
-  --raibo-gradient: linear-gradient(135deg, #E8546B, #F5B731, #3DC96E, #4BA8DB);
-  --raibo-gradient-h: linear-gradient(90deg, #E8546B, #F5B731, #3DC96E, #4BA8DB);
-
   color-scheme: dark;
-}
-
-/* ═══════════════════════════════════════════════════
-   RAIBO — Subtle rainbow accents on minimal details
-   ═══════════════════════════════════════════════════ */
-
-/* Progress bars: rainbow gradient fill */
-[data-theme="raibo"] .bg-gray-900.rounded-full.h-1\.5,
-[data-theme="raibo"] .bg-gray-900.h-1\.5.rounded-full {
-  background: var(--raibo-gradient-h) !important;
-}
-
-/* Indigo progress bar in header */
-[data-theme="raibo"] .bg-indigo-500.rounded-full {
-  background: var(--raibo-gradient-h) !important;
-}
-
-/* KPI stat values: rainbow text gradient */
-[data-theme="raibo"] .text-2xl.font-bold {
-  background: var(--raibo-gradient-h);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Level badge: subtle rainbow text instead of full gradient bg */
-[data-theme="raibo"] .text-indigo-600 {
-  background: var(--raibo-gradient-h);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Green checkbox: rainbow gradient */
-[data-theme="raibo"] .bg-green-500.border-green-500 {
-  background: var(--raibo-gradient) !important;
-  border-color: transparent !important;
-}
-
-/* Sidebar active icon: rainbow gradient on icon color */
-[data-theme="raibo"] nav .raibo-icon-active {
-  background: var(--raibo-gradient-h);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-[data-theme="raibo"] nav .raibo-icon-active svg {
-  stroke: url(#raibo-icon-gradient);
-}
-
-/* Header logo "to" accent */
-[data-theme="raibo"] .raibo-logo-accent {
-  background: var(--raibo-gradient-h);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 /* ═══════════════════════════════════════════════════
