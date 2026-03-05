@@ -312,34 +312,8 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════
-   RAIBO — Rainbow gradient card borders
-   Uses a pseudo-element technique for gradient borders
+   RAIBO — Subtle rainbow accents on minimal details
    ═══════════════════════════════════════════════════ */
-
-/* Cards: rainbow gradient top border */
-[data-theme="raibo"] .rounded-xl.border {
-  border-color: transparent;
-  position: relative;
-  overflow: hidden;
-}
-
-[data-theme="raibo"] .rounded-xl.border::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--raibo-gradient-h);
-  border-radius: 12px 12px 0 0;
-  z-index: 1;
-}
-
-/* Active nav item: rainbow gradient background */
-[data-theme="raibo"] nav .bg-gray-900 {
-  background: var(--raibo-gradient) !important;
-  color: #080808 !important;
-}
 
 /* Progress bars: rainbow gradient fill */
 [data-theme="raibo"] .bg-gray-900.rounded-full.h-1\.5,
@@ -352,36 +326,6 @@ body {
   background: var(--raibo-gradient-h) !important;
 }
 
-/* Primary buttons: rainbow gradient */
-[data-theme="raibo"] a.bg-gray-900.text-white.rounded-xl,
-[data-theme="raibo"] button.bg-gray-900.text-white.rounded-xl {
-  background: var(--raibo-gradient) !important;
-  color: #080808 !important;
-  font-weight: 600;
-}
-
-/* Hover state for gradient buttons */
-[data-theme="raibo"] a.bg-gray-900.text-white.rounded-xl:hover,
-[data-theme="raibo"] button.bg-gray-900.text-white.rounded-xl:hover {
-  opacity: 0.9;
-}
-
-/* Level badge: rainbow gradient */
-[data-theme="raibo"] .bg-indigo-50 {
-  background: var(--raibo-gradient) !important;
-  color: #080808 !important;
-}
-
-[data-theme="raibo"] .text-indigo-600 {
-  color: #080808 !important;
-}
-
-/* Green checkbox: rainbow gradient */
-[data-theme="raibo"] .bg-green-500.border-green-500 {
-  background: var(--raibo-gradient) !important;
-  border-color: transparent !important;
-}
-
 /* KPI stat values: rainbow text gradient */
 [data-theme="raibo"] .text-2xl.font-bold {
   background: var(--raibo-gradient-h);
@@ -390,74 +334,37 @@ body {
   background-clip: text;
 }
 
-/* Summary colored boxes: subtle rainbow tint */
-[data-theme="raibo"] .bg-green-50 {
-  background: linear-gradient(135deg, rgba(61,201,110,0.1), rgba(75,168,219,0.05)) !important;
-}
-[data-theme="raibo"] .bg-red-50 {
-  background: linear-gradient(135deg, rgba(232,84,107,0.1), rgba(245,183,49,0.05)) !important;
+/* Level badge: subtle rainbow text instead of full gradient bg */
+[data-theme="raibo"] .text-indigo-600 {
+  background: var(--raibo-gradient-h);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Day selector in alimentacao: rainbow when active */
-[data-theme="raibo"] .bg-gray-900.text-white.rounded-xl.min-w-\[52px\] {
+/* Green checkbox: rainbow gradient */
+[data-theme="raibo"] .bg-green-500.border-green-500 {
   background: var(--raibo-gradient) !important;
-  color: #080808 !important;
+  border-color: transparent !important;
 }
 
-/* Header border: rainbow gradient bottom */
-[data-theme="raibo"] header.border-b {
-  border-bottom-color: transparent;
-  position: relative;
-}
-[data-theme="raibo"] header.border-b::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
+/* Sidebar active icon: rainbow gradient on icon color */
+[data-theme="raibo"] nav .raibo-icon-active {
   background: var(--raibo-gradient-h);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+[data-theme="raibo"] nav .raibo-icon-active svg {
+  stroke: url(#raibo-icon-gradient);
 }
 
-/* Sidebar nav bar: rainbow gradient border */
-[data-theme="raibo"] nav .backdrop-blur-xl {
-  border-color: transparent;
-  position: relative;
-  overflow: hidden;
-}
-[data-theme="raibo"] nav .backdrop-blur-xl::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
+/* Header logo "to" accent */
+[data-theme="raibo"] .raibo-logo-accent {
   background: var(--raibo-gradient-h);
-  border-radius: 16px 16px 0 0;
-  z-index: 1;
-}
-
-/* Meal type cards in alimentacao: colored left accent */
-[data-theme="raibo"] .divide-y .flex.items-center {
-  border-left: 2px solid transparent;
-}
-
-/* Theme dropdown rainbow accent */
-[data-theme="raibo"] .animate-scale-in.border {
-  border-color: transparent;
-  position: relative;
-  overflow: hidden;
-}
-[data-theme="raibo"] .animate-scale-in.border::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--raibo-gradient-h);
-  border-radius: 12px 12px 0 0;
-  z-index: 1;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* ═══════════════════════════════════════════════════

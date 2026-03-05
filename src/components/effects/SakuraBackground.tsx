@@ -78,15 +78,23 @@ function RaiboBg() {
       {/* Pure black base */}
       <div className="absolute inset-0" style={{ background: '#040404' }} />
 
-      {/* Very subtle rainbow glow at top */}
+      {/* Subtle grid pattern */}
       <div
-        className="absolute left-1/2 -translate-x-1/2"
+        className="absolute inset-0"
         style={{
-          top: '-100px',
-          width: '100%',
-          height: '300px',
-          background: 'linear-gradient(90deg, rgba(232,84,107,0.04) 0%, rgba(245,183,49,0.03) 33%, rgba(61,201,110,0.03) 66%, rgba(75,168,219,0.04) 100%)',
-          filter: 'blur(60px)',
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
+          `,
+          backgroundSize: '40px 40px',
+        }}
+      />
+
+      {/* Soft center light glow */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: 'radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 40%, transparent 70%)',
         }}
       />
     </div>
