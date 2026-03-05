@@ -22,6 +22,7 @@ function NovaRefeicaoForm() {
     defaultDay !== null ? [parseInt(defaultDay)] : []
   )
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
 
   const toggleDay = (dayId: number) => {
     setSelectedDays(prev =>
@@ -42,6 +43,7 @@ function NovaRefeicaoForm() {
     if (!user || !name.trim() || selectedDays.length === 0) return
 
     setSaving(true)
+    setError('')
     try {
       const inserts = selectedDays.map(day => ({
         user_id: user.id,
@@ -52,10 +54,14 @@ function NovaRefeicaoForm() {
         calories: calories ? parseInt(calories) : null,
       }))
 
-      await supabase.from('diet_meals').insert(inserts)
+      const { error: dbError } = await supabase.from('diet_meals').insert(inserts)
+      if (dbError) {
+        setError(dbError.message)
+        return
+      }
       router.push('/alimentacao')
     } catch (err) {
-      console.error('Error creating meal:', err)
+      setError('Erro ao salvar refeição. Tente novamente.')
     } finally {
       setSaving(false)
     }
@@ -180,6 +186,13 @@ function NovaRefeicaoForm() {
             ))}
           </div>
         </div>
+
+        {/* Error */}
+        {error && (
+          <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-600">
+            {error}
+          </div>
+        )}
 
         {/* Submit */}
         <button
