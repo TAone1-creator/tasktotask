@@ -229,82 +229,235 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════
-   RAIBO THEME — dark base, vibrant rainbow accents
+   RAIBO THEME — pure black base, rainbow gradient accents
    ═══════════════════════════════════════════════════ */
 [data-theme="raibo"] {
-  /* Gray scale — deep dark navy-black */
-  --color-white: #0b0b14;
-  --color-gray-50: #0b0b14;
-  --color-gray-100: #12121e;
-  --color-gray-200: #1c1c2e;
-  --color-gray-300: #2a2a40;
-  --color-gray-400: #5e5e7a;
-  --color-gray-500: #8080a0;
-  --color-gray-600: #a0a0b8;
-  --color-gray-700: #c0c0d4;
-  --color-gray-800: #dcdce8;
-  --color-gray-900: #f0f0f6;
-  --color-gray-950: #f8f8fc;
-  --color-black: #f8f8fc;
+  /* Gray scale — pure black base */
+  --color-white: #080808;
+  --color-gray-50: #080808;
+  --color-gray-100: #111111;
+  --color-gray-200: #1a1a1a;
+  --color-gray-300: #282828;
+  --color-gray-400: #555555;
+  --color-gray-500: #777777;
+  --color-gray-600: #999999;
+  --color-gray-700: #bbbbbb;
+  --color-gray-800: #dddddd;
+  --color-gray-900: #f0f0f0;
+  --color-gray-950: #fafafa;
+  --color-black: #fafafa;
 
   /* Semantic tokens */
-  --color-surface: #0b0b14;
-  --color-surface-secondary: #06060c;
-  --color-surface-tertiary: #12121e;
-  --color-border: #1c1c2e;
-  --color-text-primary: #f0f0f6;
-  --color-text-secondary: #8080a0;
-  --color-text-tertiary: #5e5e7a;
+  --color-surface: #080808;
+  --color-surface-secondary: #040404;
+  --color-surface-tertiary: #111111;
+  --color-border: #1a1a1a;
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #777777;
+  --color-text-tertiary: #555555;
 
   /* Primary — coral/pink from the palette */
   --color-primary: #E8546B;
-  --color-primary-light: #1c1c2e;
+  --color-primary-light: #1a1a1a;
 
   /* Green — vibrant green from palette */
-  --color-green-50: #0a1a0f;
-  --color-green-100: #102e18;
+  --color-green-50: #081208;
+  --color-green-100: #0e1e0e;
   --color-green-500: #3DC96E;
   --color-green-600: #52d880;
   --color-green-700: #7ae4a0;
 
   /* Red — coral/pink from palette */
-  --color-red-50: #1a0a0e;
-  --color-red-100: #2e1018;
+  --color-red-50: #12080a;
+  --color-red-100: #1e0e12;
   --color-red-400: #E8546B;
   --color-red-500: #d84060;
   --color-red-600: #f07888;
   --color-red-700: #f8a0ac;
 
   /* Blue — bright blue from palette */
-  --color-blue-50: #0a1220;
-  --color-blue-100: #101e34;
+  --color-blue-50: #080e18;
+  --color-blue-100: #0e1828;
   --color-blue-500: #4BA8DB;
   --color-blue-600: #6abce8;
   --color-blue-700: #98d4f0;
 
   /* Yellow — warm amber from palette */
-  --color-yellow-50: #1a160a;
-  --color-yellow-100: #2e2410;
+  --color-yellow-50: #121008;
+  --color-yellow-100: #1e1a0e;
   --color-yellow-400: #F5B731;
   --color-yellow-500: #daa020;
   --color-yellow-700: #f0d060;
 
   /* Orange — between coral and amber */
-  --color-orange-50: #1a120a;
-  --color-orange-100: #2e1e10;
+  --color-orange-50: #120e08;
+  --color-orange-100: #1e180e;
   --color-orange-600: #e09050;
   --color-orange-700: #f0b070;
 
   /* Purple — vivid purple accent */
-  --color-purple-100: #1e1030;
+  --color-purple-100: #140e20;
   --color-purple-700: #b88ce8;
 
   /* Indigo — for level badge */
-  --color-indigo-50: #12121e;
+  --color-indigo-50: #111111;
   --color-indigo-500: #4BA8DB;
   --color-indigo-600: #6abce8;
 
+  /* Rainbow gradient variable */
+  --raibo-gradient: linear-gradient(135deg, #E8546B, #F5B731, #3DC96E, #4BA8DB);
+  --raibo-gradient-h: linear-gradient(90deg, #E8546B, #F5B731, #3DC96E, #4BA8DB);
+
   color-scheme: dark;
+}
+
+/* ═══════════════════════════════════════════════════
+   RAIBO — Rainbow gradient card borders
+   Uses a pseudo-element technique for gradient borders
+   ═══════════════════════════════════════════════════ */
+
+/* Cards: rainbow gradient top border */
+[data-theme="raibo"] .rounded-xl.border {
+  border-color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="raibo"] .rounded-xl.border::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--raibo-gradient-h);
+  border-radius: 12px 12px 0 0;
+  z-index: 1;
+}
+
+/* Active nav item: rainbow gradient background */
+[data-theme="raibo"] nav .bg-gray-900 {
+  background: var(--raibo-gradient) !important;
+  color: #080808 !important;
+}
+
+/* Progress bars: rainbow gradient fill */
+[data-theme="raibo"] .bg-gray-900.rounded-full.h-1\.5,
+[data-theme="raibo"] .bg-gray-900.h-1\.5.rounded-full {
+  background: var(--raibo-gradient-h) !important;
+}
+
+/* Indigo progress bar in header */
+[data-theme="raibo"] .bg-indigo-500.rounded-full {
+  background: var(--raibo-gradient-h) !important;
+}
+
+/* Primary buttons: rainbow gradient */
+[data-theme="raibo"] a.bg-gray-900.text-white.rounded-xl,
+[data-theme="raibo"] button.bg-gray-900.text-white.rounded-xl {
+  background: var(--raibo-gradient) !important;
+  color: #080808 !important;
+  font-weight: 600;
+}
+
+/* Hover state for gradient buttons */
+[data-theme="raibo"] a.bg-gray-900.text-white.rounded-xl:hover,
+[data-theme="raibo"] button.bg-gray-900.text-white.rounded-xl:hover {
+  opacity: 0.9;
+}
+
+/* Level badge: rainbow gradient */
+[data-theme="raibo"] .bg-indigo-50 {
+  background: var(--raibo-gradient) !important;
+  color: #080808 !important;
+}
+
+[data-theme="raibo"] .text-indigo-600 {
+  color: #080808 !important;
+}
+
+/* Green checkbox: rainbow gradient */
+[data-theme="raibo"] .bg-green-500.border-green-500 {
+  background: var(--raibo-gradient) !important;
+  border-color: transparent !important;
+}
+
+/* KPI stat values: rainbow text gradient */
+[data-theme="raibo"] .text-2xl.font-bold {
+  background: var(--raibo-gradient-h);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Summary colored boxes: subtle rainbow tint */
+[data-theme="raibo"] .bg-green-50 {
+  background: linear-gradient(135deg, rgba(61,201,110,0.1), rgba(75,168,219,0.05)) !important;
+}
+[data-theme="raibo"] .bg-red-50 {
+  background: linear-gradient(135deg, rgba(232,84,107,0.1), rgba(245,183,49,0.05)) !important;
+}
+
+/* Day selector in alimentacao: rainbow when active */
+[data-theme="raibo"] .bg-gray-900.text-white.rounded-xl.min-w-\[52px\] {
+  background: var(--raibo-gradient) !important;
+  color: #080808 !important;
+}
+
+/* Header border: rainbow gradient bottom */
+[data-theme="raibo"] header.border-b {
+  border-bottom-color: transparent;
+  position: relative;
+}
+[data-theme="raibo"] header.border-b::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--raibo-gradient-h);
+}
+
+/* Sidebar nav bar: rainbow gradient border */
+[data-theme="raibo"] nav .backdrop-blur-xl {
+  border-color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+[data-theme="raibo"] nav .backdrop-blur-xl::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--raibo-gradient-h);
+  border-radius: 16px 16px 0 0;
+  z-index: 1;
+}
+
+/* Meal type cards in alimentacao: colored left accent */
+[data-theme="raibo"] .divide-y .flex.items-center {
+  border-left: 2px solid transparent;
+}
+
+/* Theme dropdown rainbow accent */
+[data-theme="raibo"] .animate-scale-in.border {
+  border-color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+[data-theme="raibo"] .animate-scale-in.border::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--raibo-gradient-h);
+  border-radius: 12px 12px 0 0;
+  z-index: 1;
 }
 
 /* ═══════════════════════════════════════════════════

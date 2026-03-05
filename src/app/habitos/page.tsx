@@ -216,10 +216,10 @@ export default function HabitosPage() {
                         <stop offset="100%" stopColor={isRaibo ? '#4BA8DB' : isSakura ? '#e8899e' : isPureDark ? '#ffffff' : '#111827'} stopOpacity={0} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isRaibo ? '#1c1c2e' : isSakuraDark ? '#221e1f' : isPureDark ? '#1e1e1e' : isSakura ? '#fcd9e0' : '#f3f4f6'} />
-                    <XAxis dataKey="day" tick={{ fontSize: 10, fill: isRaibo ? '#5e5e7a' : isSakuraDark ? '#706568' : isPureDark ? '#6e6e6e' : isSakura ? '#b06878' : '#9ca3af' }} axisLine={false} tickLine={false} interval={Math.floor(daysInMonth.length / 10)} />
-                    <YAxis tick={{ fontSize: 10, fill: isRaibo ? '#5e5e7a' : isSakuraDark ? '#706568' : isPureDark ? '#6e6e6e' : isSakura ? '#b06878' : '#9ca3af' }} axisLine={false} tickLine={false} domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
-                    <Tooltip formatter={(value) => [`${value}%`, 'Conclusão']} contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #221e1f' : '1px solid #e5e7eb', fontSize: '12px', backgroundColor: isRaibo ? '#0b0b14' : isSakuraDark ? '#0c0a0b' : isPureDark ? '#0a0a0a' : isSakura ? '#fff8f9' : '#ffffff', color: isDark ? '#f5f0f1' : isSakura ? '#3a1428' : '#111827' }} />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isRaibo ? '#1a1a1a' : isSakuraDark ? '#221e1f' : isPureDark ? '#1e1e1e' : isSakura ? '#fcd9e0' : '#f3f4f6'} />
+                    <XAxis dataKey="day" tick={{ fontSize: 10, fill: isRaibo ? '#555555' : isSakuraDark ? '#706568' : isPureDark ? '#6e6e6e' : isSakura ? '#b06878' : '#9ca3af' }} axisLine={false} tickLine={false} interval={Math.floor(daysInMonth.length / 10)} />
+                    <YAxis tick={{ fontSize: 10, fill: isRaibo ? '#555555' : isSakuraDark ? '#706568' : isPureDark ? '#6e6e6e' : isSakura ? '#b06878' : '#9ca3af' }} axisLine={false} tickLine={false} domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
+                    <Tooltip formatter={(value) => [`${value}%`, 'Conclusão']} contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #221e1f' : '1px solid #e5e7eb', fontSize: '12px', backgroundColor: isRaibo ? '#080808' : isSakuraDark ? '#0c0a0b' : isPureDark ? '#0a0a0a' : isSakura ? '#fff8f9' : '#ffffff', color: isDark ? '#f5f0f1' : isSakura ? '#3a1428' : '#111827' }} />
                     <Area type="monotone" dataKey="rate" stroke={isRaibo ? '#4BA8DB' : isSakura ? '#e8899e' : isPureDark ? '#ffffff' : '#111827'} strokeWidth={2} fill="url(#progressGrad)" dot={false} activeDot={{ r: 4 }} />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -347,7 +347,7 @@ export default function HabitosPage() {
                               <Tooltip
                                 formatter={(value) => [Number(value) > 0 ? 'Feito' : 'Nao feito', '']}
                                 labelFormatter={(label) => `Dia ${label}`}
-                                contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #221e1f' : '1px solid #e5e7eb', fontSize: '11px', padding: '4px 8px', backgroundColor: isRaibo ? '#0b0b14' : isSakuraDark ? '#0c0a0b' : isPureDark ? '#0a0a0a' : isSakura ? '#fff8f9' : '#ffffff', color: isDark ? '#f5f0f1' : isSakura ? '#3a1428' : '#111827' }}
+                                contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #221e1f' : '1px solid #e5e7eb', fontSize: '11px', padding: '4px 8px', backgroundColor: isRaibo ? '#080808' : isSakuraDark ? '#0c0a0b' : isPureDark ? '#0a0a0a' : isSakura ? '#fff8f9' : '#ffffff', color: isDark ? '#f5f0f1' : isSakura ? '#3a1428' : '#111827' }}
                               />
                             </AreaChart>
                           </ResponsiveContainer>
