@@ -362,6 +362,47 @@ export interface Database {
           updated_at?: string
         }
       }
+      workout_exercises: {
+        Row: {
+          id: string
+          user_id: string
+          muscle_group: 'chest' | 'back' | 'shoulders' | 'biceps' | 'triceps' | 'legs' | 'glutes' | 'abs' | 'cardio' | 'full_body'
+          day_of_week: number
+          name: string
+          sets: number | null
+          reps: string | null
+          rest_seconds: number | null
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          muscle_group: 'chest' | 'back' | 'shoulders' | 'biceps' | 'triceps' | 'legs' | 'glutes' | 'abs' | 'cardio' | 'full_body'
+          day_of_week: number
+          name: string
+          sets?: number | null
+          reps?: string | null
+          rest_seconds?: number | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          muscle_group?: 'chest' | 'back' | 'shoulders' | 'biceps' | 'triceps' | 'legs' | 'glutes' | 'abs' | 'cardio' | 'full_body'
+          day_of_week?: number
+          name?: string
+          sets?: number | null
+          reps?: string | null
+          rest_seconds?: number | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
@@ -385,3 +426,4 @@ export type Task = Database['public']['Tables']['tasks']['Row']
 export type TaskChecklistItem = Database['public']['Tables']['task_checklist_items']['Row']
 export type Badge = Database['public']['Tables']['badges']['Row']
 export type DietMeal = Database['public']['Tables']['diet_meals']['Row']
+export type WorkoutExercise = Database['public']['Tables']['workout_exercises']['Row']

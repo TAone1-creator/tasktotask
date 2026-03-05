@@ -10,6 +10,7 @@ import {
   Repeat,
   CheckSquare,
   UtensilsCrossed,
+  Dumbbell,
   User,
 } from 'lucide-react'
 
@@ -20,6 +21,7 @@ const navItems = [
   { href: '/habitos', label: 'Habitos', icon: Repeat, color: '#4BA8DB' },
   { href: '/tarefas', label: 'Tarefas', icon: CheckSquare, color: '#E8546B' },
   { href: '/alimentacao', label: 'Dieta', icon: UtensilsCrossed, color: '#F5B731' },
+  { href: '/treinos', label: 'Treinos', icon: Dumbbell, color: '#4BA8DB' },
   { href: '/perfil', label: 'Perfil', icon: User, color: '#3DC96E' },
 ]
 

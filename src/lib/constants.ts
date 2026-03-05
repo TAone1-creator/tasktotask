@@ -49,6 +49,19 @@ export const WEEKDAYS = [
   { id: 6, label: 'Sábado', short: 'Sáb' },
 ]
 
+export const MUSCLE_GROUPS = [
+  { id: 'chest', label: 'Peito', icon: '🏋️' },
+  { id: 'back', label: 'Costas', icon: '🔙' },
+  { id: 'shoulders', label: 'Ombros', icon: '💪' },
+  { id: 'biceps', label: 'Bíceps', icon: '💪' },
+  { id: 'triceps', label: 'Tríceps', icon: '💪' },
+  { id: 'legs', label: 'Pernas', icon: '🦵' },
+  { id: 'glutes', label: 'Glúteos', icon: '🍑' },
+  { id: 'abs', label: 'Abdômen', icon: '🧱' },
+  { id: 'cardio', label: 'Cardio', icon: '🫀' },
+  { id: 'full_body', label: 'Full Body', icon: '🏃' },
+]
+
 export const CYCLE_OPTIONS = [
   { months: 3, label: '3 meses' },
   { months: 4, label: '4 meses' },
