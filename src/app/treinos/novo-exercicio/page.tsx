@@ -24,6 +24,7 @@ function NovoExercicioForm() {
     defaultDay !== null ? [parseInt(defaultDay)] : []
   )
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
 
   const toggleDay = (dayId: number) => {
     setSelectedDays(prev =>
@@ -44,6 +45,7 @@ function NovoExercicioForm() {
     if (!user || !name.trim() || selectedDays.length === 0) return
 
     setSaving(true)
+    setError('')
     try {
       const inserts = selectedDays.map(day => ({
         user_id: user.id,
@@ -56,10 +58,14 @@ function NovoExercicioForm() {
         notes: notes.trim() || null,
       }))
 
-      await supabase.from('workout_exercises').insert(inserts)
+      const { error: dbError } = await supabase.from('workout_exercises').insert(inserts)
+      if (dbError) {
+        setError(dbError.message)
+        return
+      }
       router.push('/treinos')
     } catch (err) {
-      console.error('Error creating exercise:', err)
+      setError('Erro ao salvar exercício. Tente novamente.')
     } finally {
       setSaving(false)
     }
@@ -213,6 +219,13 @@ function NovoExercicioForm() {
             ))}
           </div>
         </div>
+
+        {/* Error */}
+        {error && (
+          <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-600">
+            {error}
+          </div>
+        )}
 
         {/* Submit */}
         <button
