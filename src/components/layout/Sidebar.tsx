@@ -35,7 +35,6 @@ export default function Sidebar() {
           const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
           const Icon = item.icon
 
-          // Raibo: active = colored icon on dark bg, inactive = dim icon with subtle color on hover
           if (isRaibo) {
             return (
               <Link

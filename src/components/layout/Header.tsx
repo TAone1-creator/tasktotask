@@ -82,7 +82,7 @@ export default function Header({ profile }: { profile: Profile | null }) {
         {/* Center: Logo */}
         <Link href="/dashboard" className="absolute left-1/2 -translate-x-1/2">
           <h1 className="text-base font-bold tracking-tight text-gray-900">
-            task<span className={theme === 'raibo' ? '' : 'text-gray-400'} style={theme === 'raibo' ? { background: 'linear-gradient(90deg, #E8546B, #F5B731, #3DC96E, #4BA8DB)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' } : undefined}>to</span>task
+            task<span className={theme === 'raibo' ? 'text-[#E8546B]' : 'text-gray-400'}>to</span>task
           </h1>
         </Link>
 
