@@ -184,7 +184,7 @@ export default function FinancasPage() {
                       <Pie data={pieData} cx="50%" cy="50%" innerRadius={55} outerRadius={85} paddingAngle={3} dataKey="value">
                         {pieData.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
                       </Pie>
-                      <Tooltip formatter={(value) => [`R$ ${Number(value).toFixed(2)}`, '']} contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #221e1f' : '1px solid #e5e7eb', fontSize: '12px', backgroundColor: isRaibo ? '#0b0b14' : isSakuraDark ? '#0c0a0b' : isPureDark ? '#0a0a0a' : isSakura ? '#fff8f9' : '#ffffff', color: isDark ? '#f5f0f1' : isSakura ? '#3a1428' : '#111827' }} />
+                      <Tooltip formatter={(value) => [`R$ ${Number(value).toFixed(2)}`, '']} contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #221e1f' : '1px solid #e5e7eb', fontSize: '12px', backgroundColor: isRaibo ? '#080808' : isSakuraDark ? '#0c0a0b' : isPureDark ? '#0a0a0a' : isSakura ? '#fff8f9' : '#ffffff', color: isDark ? '#f5f0f1' : isSakura ? '#3a1428' : '#111827' }} />
                     </PieChart>
                   </ResponsiveContainer>
                   <div className="flex flex-wrap gap-3 mt-2 justify-center">
@@ -207,12 +207,12 @@ export default function FinancasPage() {
               ) : (
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={barData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isSakuraDark ? '#221e1f' : isPureDark ? '#1e1e1e' : isSakura ? '#fcd9e0' : '#f3f4f6'} />
-                    <XAxis dataKey="day" tick={{ fontSize: 10, fill: isSakuraDark ? '#706568' : isPureDark ? '#6e6e6e' : isSakura ? '#b06878' : '#9ca3af' }} axisLine={false} tickLine={false} interval={Math.floor(barData.length / 8)} />
-                    <YAxis tick={{ fontSize: 10, fill: isSakuraDark ? '#706568' : isPureDark ? '#6e6e6e' : isSakura ? '#b06878' : '#9ca3af' }} axisLine={false} tickLine={false} />
-                    <Tooltip formatter={(value, name) => [`R$ ${Number(value).toFixed(2)}`, name]} contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #221e1f' : '1px solid #e5e7eb', fontSize: '12px', backgroundColor: isRaibo ? '#0b0b14' : isSakuraDark ? '#0c0a0b' : isPureDark ? '#0a0a0a' : isSakura ? '#fff8f9' : '#ffffff', color: isDark ? '#f5f0f1' : isSakura ? '#3a1428' : '#111827' }} />
-                    <Bar dataKey="Gastos" fill={isSakuraDark ? '#e87080' : isPureDark ? '#e05555' : isSakura ? '#e04870' : '#EF4444'} radius={[3, 3, 0, 0]} />
-                    <Bar dataKey="Ganhos" fill={isSakuraDark ? '#e8899e' : isPureDark ? '#3dbb63' : isSakura ? '#e8638a' : '#10B981'} radius={[3, 3, 0, 0]} />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isRaibo ? '#1a1a1a' : isSakuraDark ? '#221e1f' : isPureDark ? '#1e1e1e' : isSakura ? '#fcd9e0' : '#f3f4f6'} />
+                    <XAxis dataKey="day" tick={{ fontSize: 10, fill: isRaibo ? '#555555' : isSakuraDark ? '#706568' : isPureDark ? '#6e6e6e' : isSakura ? '#b06878' : '#9ca3af' }} axisLine={false} tickLine={false} interval={Math.floor(barData.length / 8)} />
+                    <YAxis tick={{ fontSize: 10, fill: isRaibo ? '#555555' : isSakuraDark ? '#706568' : isPureDark ? '#6e6e6e' : isSakura ? '#b06878' : '#9ca3af' }} axisLine={false} tickLine={false} />
+                    <Tooltip formatter={(value, name) => [`R$ ${Number(value).toFixed(2)}`, name]} contentStyle={{ borderRadius: '8px', border: isDark ? '1px solid #221e1f' : '1px solid #e5e7eb', fontSize: '12px', backgroundColor: isRaibo ? '#080808' : isSakuraDark ? '#0c0a0b' : isPureDark ? '#0a0a0a' : isSakura ? '#fff8f9' : '#ffffff', color: isDark ? '#f5f0f1' : isSakura ? '#3a1428' : '#111827' }} />
+                    <Bar dataKey="Gastos" fill={isRaibo ? '#E8546B' : isSakuraDark ? '#e87080' : isPureDark ? '#e05555' : isSakura ? '#e04870' : '#EF4444'} radius={[3, 3, 0, 0]} />
+                    <Bar dataKey="Ganhos" fill={isRaibo ? '#3DC96E' : isSakuraDark ? '#e8899e' : isPureDark ? '#3dbb63' : isSakura ? '#e8638a' : '#10B981'} radius={[3, 3, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               )}

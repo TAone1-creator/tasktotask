@@ -30,6 +30,25 @@ export const TASK_CATEGORIES = [
   'Outros',
 ]
 
+export const MEAL_TYPES = [
+  { id: 'breakfast', label: 'Café da manhã', icon: '☕' },
+  { id: 'morning_snack', label: 'Lanche da manhã', icon: '🍎' },
+  { id: 'lunch', label: 'Almoço', icon: '🍽️' },
+  { id: 'afternoon_snack', label: 'Lanche da tarde', icon: '🥤' },
+  { id: 'dinner', label: 'Jantar', icon: '🍲' },
+  { id: 'supper', label: 'Ceia', icon: '🌙' },
+]
+
+export const WEEKDAYS = [
+  { id: 0, label: 'Domingo', short: 'Dom' },
+  { id: 1, label: 'Segunda', short: 'Seg' },
+  { id: 2, label: 'Terça', short: 'Ter' },
+  { id: 3, label: 'Quarta', short: 'Qua' },
+  { id: 4, label: 'Quinta', short: 'Qui' },
+  { id: 5, label: 'Sexta', short: 'Sex' },
+  { id: 6, label: 'Sábado', short: 'Sáb' },
+]
+
 export const CYCLE_OPTIONS = [
   { months: 3, label: '3 meses' },
   { months: 4, label: '4 meses' },

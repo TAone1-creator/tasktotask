@@ -8,6 +8,7 @@ import {
   Wallet,
   Repeat,
   CheckSquare,
+  UtensilsCrossed,
   User,
 } from 'lucide-react'
 
@@ -17,6 +18,7 @@ const navItems = [
   { href: '/financas', label: 'Financas', icon: Wallet },
   { href: '/habitos', label: 'Habitos', icon: Repeat },
   { href: '/tarefas', label: 'Tarefas', icon: CheckSquare },
+  { href: '/alimentacao', label: 'Dieta', icon: UtensilsCrossed },
   { href: '/perfil', label: 'Perfil', icon: User },
 ]
 

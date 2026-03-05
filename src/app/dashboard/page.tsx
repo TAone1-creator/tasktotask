@@ -3,10 +3,11 @@
 import AppLayout from '@/components/layout/AppLayout'
 import { useAuth } from '@/hooks/useAuth'
 import { useEffect, useState } from 'react'
-import { Target, Wallet, Repeat, CheckSquare } from 'lucide-react'
+import { Target, Wallet, Repeat, CheckSquare, UtensilsCrossed } from 'lucide-react'
 import Link from 'next/link'
 import { format } from 'date-fns'
-import type { Goal, Habit, Task, Transaction } from '@/types/database'
+import type { Goal, Habit, Task, Transaction, DietMeal } from '@/types/database'
+import { MEAL_TYPES } from '@/lib/constants'
 
 export default function DashboardPage() {
   const { profile, supabase, user } = useAuth()
@@ -16,6 +17,7 @@ export default function DashboardPage() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [monthIncome, setMonthIncome] = useState(0)
   const [monthExpense, setMonthExpense] = useState(0)
+  const [todayMeals, setTodayMeals] = useState<DietMeal[]>([])
 
   useEffect(() => {
     if (!user) return
@@ -24,12 +26,14 @@ export default function DashboardPage() {
 
     const fetchData = async () => {
       try {
-        const [goalsRes, habitsRes, logsRes, tasksRes, transactionsRes] = await Promise.all([
+        const todayDow = new Date().getDay()
+        const [goalsRes, habitsRes, logsRes, tasksRes, transactionsRes, dietRes] = await Promise.all([
           supabase.from('goals').select('*').eq('user_id', user.id).eq('status', 'active').order('deadline').limit(5),
           supabase.from('habits').select('*').eq('user_id', user.id).eq('status', 'active'),
           supabase.from('habit_logs').select('*').eq('user_id', user.id).eq('date', today).eq('completed', true),
           supabase.from('tasks').select('*').eq('user_id', user.id).eq('status', 'pending').order('due_date').limit(5),
           supabase.from('transactions').select('*').eq('user_id', user.id).gte('date', monthStart).lte('date', today),
+          supabase.from('diet_meals').select('*').eq('user_id', user.id).eq('day_of_week', todayDow).order('meal_type'),
         ])
 
         setGoals((goalsRes.data || []) as Goal[])
@@ -40,6 +44,7 @@ export default function DashboardPage() {
         const txns = (transactionsRes.data || []) as Transaction[]
         setMonthIncome(txns.filter(t => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0))
         setMonthExpense(txns.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0))
+        setTodayMeals((dietRes.data || []) as DietMeal[])
       } catch (err) {
         console.error('Error loading dashboard data:', err)
       }
@@ -233,6 +238,38 @@ export default function DashboardPage() {
                 </span>
               </div>
             </div>
+          </div>
+
+          {/* Today's Diet */}
+          <div className="bg-white rounded-xl border border-gray-100 p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-sm font-semibold text-gray-900">Dieta de Hoje</h2>
+              <Link href="/alimentacao" className="text-xs text-gray-500 hover:text-gray-700">Ver plano</Link>
+            </div>
+            {todayMeals.length === 0 ? (
+              <div className="text-center py-8">
+                <UtensilsCrossed className="mx-auto text-gray-300" size={32} />
+                <p className="mt-2 text-sm text-gray-400">Nenhuma refeição para hoje</p>
+                <Link href="/alimentacao/nova-refeicao" className="mt-2 inline-block text-sm text-gray-900 font-medium hover:underline">
+                  Montar dieta
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {MEAL_TYPES.map((type) => {
+                  const typeMeals = todayMeals.filter(m => m.meal_type === type.id)
+                  if (typeMeals.length === 0) return null
+                  return (
+                    <div key={type.id} className="p-3 rounded-lg border border-gray-100">
+                      <p className="text-xs text-gray-400 mb-1">{type.icon} {type.label}</p>
+                      {typeMeals.map(meal => (
+                        <p key={meal.id} className="text-sm text-gray-700">{meal.name}</p>
+                      ))}
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>

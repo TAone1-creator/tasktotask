@@ -75,52 +75,18 @@ function SakuraDarkBg() {
 function RaiboBg() {
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-      {/* Deep dark base */}
-      <div className="absolute inset-0" style={{ background: '#06060c' }} />
+      {/* Pure black base */}
+      <div className="absolute inset-0" style={{ background: '#040404' }} />
 
-      {/* Subtle colored glow spots */}
+      {/* Very subtle rainbow glow at top */}
       <div
-        className="absolute"
+        className="absolute left-1/2 -translate-x-1/2"
         style={{
-          top: '-80px',
-          left: '20%',
-          width: '400px',
-          height: '250px',
-          borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(232,84,107,0.08) 0%, transparent 70%)',
-        }}
-      />
-      <div
-        className="absolute"
-        style={{
-          top: '30%',
-          right: '10%',
-          width: '350px',
-          height: '350px',
-          borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(75,168,219,0.06) 0%, transparent 70%)',
-        }}
-      />
-      <div
-        className="absolute"
-        style={{
-          bottom: '10%',
-          left: '15%',
-          width: '300px',
+          top: '-100px',
+          width: '100%',
           height: '300px',
-          borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(61,201,110,0.05) 0%, transparent 70%)',
-        }}
-      />
-      <div
-        className="absolute"
-        style={{
-          top: '10%',
-          right: '30%',
-          width: '250px',
-          height: '250px',
-          borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(245,183,49,0.05) 0%, transparent 70%)',
+          background: 'linear-gradient(90deg, rgba(232,84,107,0.04) 0%, rgba(245,183,49,0.03) 33%, rgba(61,201,110,0.03) 66%, rgba(75,168,219,0.04) 100%)',
+          filter: 'blur(60px)',
         }}
       />
     </div>
