@@ -175,7 +175,7 @@ export default function DashboardPage() {
               {/* Weekday Headers */}
               <div className="grid grid-cols-7 border-b border-gray-100">
                 {WEEKDAY_HEADERS.map((header) => (
-                  <div key={header} className="py-2.5 text-center text-[11px] font-semibold text-gray-400 uppercase tracking-wide">
+                  <div key={header} className="py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wide">
                     {header}
                   </div>
                 ))}
@@ -192,14 +192,14 @@ export default function DashboardPage() {
                   return (
                     <div
                       key={idx}
-                      className={`min-h-[80px] border-b border-r border-gray-50 p-1.5 transition-colors ${
+                      className={`min-h-[110px] border-b border-r border-gray-50 p-2 transition-colors ${
                         !inMonth ? 'bg-gray-50/50' : 'bg-white hover:bg-gray-50/50'
                       } ${idx % 7 === 0 ? 'border-l-0' : ''}`}
                     >
                       {/* Day number */}
-                      <div className="flex items-center justify-end mb-1">
+                      <div className="flex items-center justify-end mb-1.5">
                         <span
-                          className={`text-xs font-medium w-6 h-6 flex items-center justify-center rounded-full ${
+                          className={`text-sm font-medium w-7 h-7 flex items-center justify-center rounded-full ${
                             isSelected
                               ? 'bg-gray-900 text-white'
                               : !inMonth
@@ -214,11 +214,11 @@ export default function DashboardPage() {
                       </div>
 
                       {/* Events */}
-                      <div className="space-y-0.5">
+                      <div className="space-y-1">
                         {events.map((event, i) => (
                           <div
                             key={i}
-                            className={`${event.color} text-white text-[9px] font-medium px-1.5 py-0.5 rounded truncate leading-tight`}
+                            className={`${event.color} text-white text-[10px] font-medium px-2 py-1 rounded truncate leading-tight`}
                           >
                             {event.label}
                           </div>
